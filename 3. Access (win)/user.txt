@@ -1,0 +1,31 @@
+#10.10.10.98
+#PORT - 80, 21(ftp), 23(telnet)
+
+#ftp(anonymous)
+#there are two types of transfer modes on ftp:- binary & ascii
+#use 
+binary
+get <file name>
+
+#mdbtools (for .mdb or microsoft access)
+mdb-tables backup.mdb
+mdb-export backup.mdb <table name>        (table name = auth_user)
+
+#password for "Access Control.zip"
+access4u@security
+
+#for Access.pst file
+#use microsoft outlook
+	OR
+#'readpst' tool to change .pst file to .mbox 
+readpst "Access Control.pst"
+less "Access Control.pst"
+
+#telnet credentials
+user- security
+passwd- 4Cc3ssC0ntr0ller
+
+
+#key
+ff1f3b48913b213a31ff6756d2553d38
+

