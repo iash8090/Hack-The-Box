@@ -1,0 +1,75 @@
+#10.10.10.121
+#PORT- 22, 80, 3000
+
+#nmap
+#dirb- /support, /support/uploads/
+
+-----------------------------------------------------------
+1st METHOD
+-----------------------------------------------------------
+#access 10.10.10.121:3000
+#check response header 
+#found 'X-Powered-By: Express'
+#Express is a web application framework for Node.js
+#Node.js is an open-source, cross-platform JavaScript run-time environment that executes JavaScript code outside of a browser.
+#
+#GraphQL(API) is a syntax that describes how to ask for data, and is generally used to load data from a server to a client known as API.
+#add Altair GraphQL client extension on chrome
+#send an GET request on "http://10.10.10.121:3000/graphql" with query
+#to get query , click on 'Docs' and add query
+#cred found
+#USER= helpme@helpme.com
+#PASSWD= 5d3c93182bb20f07b994a7f617e99cff   --> [md5 decode == godhelpmeplz ]
+
+#login into helpdeskz webpage  http://10.10.10.121/support
+#upload payload on 'submit a ticket' tab or insye 'my tickets'
+#Rest steps 
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------------------
+2nd METHOD		(used)
+------------------------------------------------------------
+#found website  http://10.10.10.121/support   -->  helpdeskz
+#upload shell (phpshell.php) in 'Subtimit a ticket' tab and intercept data.
+#after uploading file, check response in burp 
+#found (phpshell.php) file is uploaded in '/support/uploads/tickets/' directory
+ 
+#there will be error but file is uploaded... 
+#to know more why it is giving error and how it still got uploaded check this:
+-----------------------------------------------------------------------------------
+#analyse the helpdeskz website source code to know about errors and behind concept
+>>>https://github.com/evolutionscript/HelpDeskZ-1.0/blob/master/controllers/submit_ticket_controller.php#L137-L165
+
+#Line by line code explanation:
+
+(137) Check if you are allowed to attach files to ticket.
+(138) Set upload directory.
+(139) If there was no error uploading the file ...
+(140-143) Get extension of the uploaded file, create md5 of filename+current unixtime, create array with metainfo, create variable for target directory/filename
+(144) Move the uploaded file to the calculated name
+(145-146) If move failed, bail out with an error
+(147) Upload succeeded
+(148-161) Check if file is allowed for extension/characters in the filename and size, bail out if something is wrong
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+#exploit found for helpdeskz to get the urlpath of uploaded file (can use to trigger our uploaded reverse shell)
+>>>https://www.exploit-db.com/exploits/40300
+#may need to change the time of local machine as HTB machine  (UTC +00)
+#may need to change the range inside .py script (0, 300)
+
+#start listener on 1337
+#run script after uploading file.
+python 40300.py http://10.10.10.121/support/uploads/tickets/ phpshell.php
+#you will get shell because script is also executing 
+#if you don't get shell, you will get link , wait for some time
+#got the link     (http://10.10.10.121/support/uploads/tickets/816dc2e44364cb5cfa828409bad6d253.php)
+#open link
+
+
+#key
+bb8a7b36bdce0c61ccebaa173ef946af
+
+++++++++++++++++++++++++++++++++
+@jkr
+++++++++++++++++++++++++++++++++

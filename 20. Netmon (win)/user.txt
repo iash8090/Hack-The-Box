@@ -1,0 +1,11 @@
+#10.10.10.152
+#PORT- 21, 80, 135, 139, 445
+
+#nmap
+
+#ftp anonymous login
+#Got user.txt inside 'Public' Directory
+
+
+#key
+dd58ce67b49e15105e88096c8d9255a5

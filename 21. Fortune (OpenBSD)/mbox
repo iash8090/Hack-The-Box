@@ -1,0 +1,23 @@
+From bob@fortune.htb Sat Nov  3 11:18:51 2018
+Return-Path: <bob@fortune.htb>
+Delivered-To: charlie@fortune.htb
+Received: from localhost (fortune.htb [local])
+	by fortune.htb (OpenSMTPD) with ESMTPA id bf12aa53
+	for <charlie@fortune.htb>;
+	Sat, 3 Nov 2018 11:18:51 -0400 (EDT)
+From:  <bob@fortune.htb>
+Date: Sat, 3 Nov 2018 11:18:51 -0400 (EDT)
+To: charlie@fortune.htb
+Subject: pgadmin4
+Message-ID: <196699abe1fed384@fortune.htb>
+Status: RO
+
+Hi Charlie,
+
+Thanks for setting-up pgadmin4 for me. Seems to work great so far.
+BTW: I set the dba password to the same as root. I hope you don't mind.
+
+Cheers,
+
+Bob
+

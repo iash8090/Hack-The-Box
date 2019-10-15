@@ -1,0 +1,14 @@
+#10.10.10.121
+--------------
+#check linux kernel
+#uname -a    (linux 4.4.0-116-generic)
+#exploit found to get LPE(local priv Esc) -->  	(44298.c)
+>>>https://www.exploit-db.com/exploits/44298
+#upload it
+#compile it
+gcc -o asd 44298.c
+#got root
+
+
+#key
+b7fe6082dcdf0c1b1e02ab0d9daddb98

