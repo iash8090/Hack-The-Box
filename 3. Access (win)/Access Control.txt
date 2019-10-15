@@ -1,8 +1,0 @@
-#this is the content of "Access Control.pst" file
-
-Hi there,
-
-The password for the "security" account has been changed to 4Cc3ssC0ntr0ller.  Please ensure this is passed on to your engineers.
-
-Regards,
-John
