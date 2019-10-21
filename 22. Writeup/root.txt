@@ -1,0 +1,39 @@
+#10.10.10.138
+
+just run the linenum.sh script on  '/tmp' folder of server -> nothing special found
+
+if we check running process for root user
+cmd>  ps aux | grep roo
+
+we found that cron job is running 
+to check what it is executing we use 'pspy64' in '/tmp'
+just upload it on server and run using 'bash' because it will not directly run 
+
+cmd>  bash pspy64
+
+Now if we open new ssh connection then we can see in pspy64 that a 'run-parts' command is executing
+and if we check that where it is located , inside '/bin' directory
+cmd> which run-parts  --> /bin/run-parts
+
+but if we check the '$PATH' value then 
+cmd>  echo $PATH  --> /usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+
+ '/usr/local/bin' is executing before '/bin' so what if we create new 'run-parts' binary inside '/usr/local/bin' with reverse shell using 'python' interpreter
+
+ so it will execute our 'run-parts' binary before original one.
+
+ check 'run-parts' file.
+
+ start listner on 4444
+
+start new ssh connection
+#USER:   jkr
+#PASSWD: raykayjay9
+
+got the shell......
+
+
+
+
+#key
+eeba47f60b48ef92b734f9b6198d7226

