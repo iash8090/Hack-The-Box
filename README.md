@@ -1,7 +1,7 @@
-<h2><center>
+<h2><centre>
 HTB
 Writeups for retired HTB machines
-</center></h2>
+</centre></h2>
 Here is refrence for HTB machines:-
 
 https://ippsec.rocks/
